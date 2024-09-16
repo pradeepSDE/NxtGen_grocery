@@ -8,16 +8,16 @@ import { Plus, Minus, ShoppingBag, Truck, CreditCard } from "lucide-react"
 
 
 
-export default function CartPage() {
+export const Cart=()=> {
   const [address, setAddress] = useState("123 Green St, Freshville, FC 12345")
   const [isEditingAddress, setIsEditingAddress] = useState(false)
-  const [products, setProducts] = useState<Product[]>([
+  const [products, setProducts] = useState([
     { id: 1, name: "Organic Apples", price: 3.99, quantity: 2, image: "/placeholder.svg?height=100&width=100" },
     { id: 2, name: "Fresh Spinach", price: 2.49, quantity: 1, image: "/placeholder.svg?height=100&width=100" },
     { id: 3, name: "Whole Grain Bread", price: 4.99, quantity: 1, image: "/placeholder.svg?height=100&width=100" },
   ])
 
-  const updateQuantity = (id: number, change: number) => {
+  const updateQuantity = (id, change) => {
     setProducts(products.map(product => 
       product.id === id ? { ...product, quantity: Math.max(0, product.quantity + change) } : product
     ).filter(product => product.quantity > 0))

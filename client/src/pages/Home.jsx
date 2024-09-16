@@ -2,6 +2,7 @@ import { useState } from "react"
 import { ShoppingCart, ArrowRight, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Link } from "react-router-dom"
 
 export default function HomePage() {
   const [visibleProducts, setVisibleProducts] = useState(8)
@@ -43,9 +44,11 @@ export default function HomePage() {
       {/* Call to Action */}
       <section className="text-center mb-12">
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Start Shopping Now</h2>
-        <Button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full text-lg">
+        <Link to={"/products"}>
+        <Button  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full text-lg">
           Explore Products
         </Button>
+        </Link>
       </section>
 
       {/* Products Section */}
