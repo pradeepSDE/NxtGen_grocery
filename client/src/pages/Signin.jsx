@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function SignupPage() {
+export const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -35,10 +35,10 @@ export default function SignupPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-3xl font-bold text-center text-green-700">
-            Join FreshMart
+            LogIn to NxtGen
           </CardTitle>
           <CardDescription className="text-center text-green-600">
-            Sign up to start shopping fresh, organic groceries
+            Sign in to start shopping fresh, organic groceries
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -79,22 +79,6 @@ export default function SignupPage() {
           </div>
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-green-700">
-                Full Name
-              </Label>
-              <div className="relative">
-                <Input
-                  id="name"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="pl-10 border-green-300 focus:border-green-500 focus:ring-green-500"
-                  required
-                />
-                <User className="absolute left-3 top-2.5 h-5 w-5 text-green-400" />
-              </div>
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="email" className="text-green-700">
                 Email
               </Label>
@@ -131,23 +115,24 @@ export default function SignupPage() {
               type="submit"
               className="w-full bg-green-500 hover:bg-green-600 text-white"
             >
-              Create Account
+              SignIn
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-green-700">
-            Already have an account?{" "}
+            Create Account?{" "}
             <Link
-              to={"/signin"}
+              to={"/signup"}
               className="text-green-600 font-semibold hover:underline"
             >
-              Sign In
+              {" "}
+              SignUp
             </Link>
           </p>
         </CardFooter>
       </Card>
     </div>
   );
-}
+};
