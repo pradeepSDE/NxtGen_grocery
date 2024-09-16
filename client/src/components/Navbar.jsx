@@ -5,6 +5,7 @@ import { ShoppingCart, User, Search, Menu, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Link } from "react-router-dom"
 
 export default function Navbar() {
   const [isSearchVisible, setIsSearchVisible] = useState(false)
@@ -14,9 +15,11 @@ export default function Navbar() {
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           {/* Logo */}
+          <Link to={"/"}>
           <div className="text-2xl font-bold text-white">
             🍎 FreshMart
           </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4 flex-1 justify-end">
