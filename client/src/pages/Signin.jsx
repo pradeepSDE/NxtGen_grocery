@@ -13,21 +13,28 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-
-  const handleSignup = (e) => {
+  const navigate = useNavigate();
+  const handleSignup = async(e) => {
     e.preventDefault();
-    // Handle signup logic here
+    const user = await axios.post('/signin', { email, password })
+    if(user.data.error){
+      return alert(user.data.error)
+    }else{
+      alert("Login successful")
+navigate("/products")
+    }
     console.log("Signup with:", { name, email, password });
   };
 
   const handleGoogleSignup = () => {
-    // Handle Google signup logic here
-    console.log("Signup with Google");
+    window.location.href = "http://localhost:8000/login/federated/google";
   };
 
   return (

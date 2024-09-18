@@ -13,16 +13,23 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     // Handle signup logic here
-    console.log("Signup with:", { name, email, password });
+    const response = await axios.post("/signup", { name, email, password });
+    console.log(response.data);
+    if (response.data.error) {
+      return alert(response.data.error);
+    } else {
+      alert("Signup successful", response.data.name);
+    }
   };
 
   const handleGoogleSignup = () => {

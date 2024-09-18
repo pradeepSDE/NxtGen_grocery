@@ -8,7 +8,9 @@ import SignupPage from "./pages/Signup";
 import { SignIn } from "./pages/Signin";
 import { Cart } from "./pages/Cart";
 import { Products } from "./pages/Products";
-
+import axios from "axios";
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:8000";
 function App() {
   return (
     <>
