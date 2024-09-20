@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import { DropDownProfile } from "./DropdownProfile";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const cart = useSelector((state) => state.cart);
 
   return (
     <nav className="bg-gradient-to-r from-green-400 to-teal-500 p-4 shadow-lg">
@@ -38,7 +40,7 @@ export default function Navbar() {
               <Link to={"/cart"}>
               <ShoppingCart className="h-6 w-6" />
               <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                3
+                {cart.cart.length}
               </span>
               </Link>
             </Button>
