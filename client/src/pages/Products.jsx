@@ -123,7 +123,8 @@ export const Products = () => {
   };
 
   const handleAddToCart = (product) => {
-    dispatch(setCart(product));
+    const productWithQuantity = { ...product, quantity: product.quantity || 1 }
+    dispatch(setCart(productWithQuantity));
     const currentCart  = JSON.parse(localStorage.getItem('cart')) || []
     const existingItem = currentCart.find(item => item.id === product.id)
     // console.log(exist)

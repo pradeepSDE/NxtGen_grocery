@@ -40,22 +40,18 @@ const userSchema = new Schema(
     address: {
       street: {
         type: String,
-
         trim: true,
       },
       city: {
         type: String,
-
         trim: true,
       },
       state: {
         type: String,
-
         trim: true,
       },
       zipCode: {
         type: String,
-
         trim: true,
       },
     },
@@ -86,7 +82,6 @@ const userSchema = new Schema(
         orderId: {
           type: Schema.Types.ObjectId,
           ref: "Order", // Reference to Order model
-          required: true,
         },
         orderDate: {
           type: Date,
@@ -99,7 +94,6 @@ const userSchema = new Schema(
         },
         totalAmount: {
           type: Number,
-          required: true,
         },
       },
     ],

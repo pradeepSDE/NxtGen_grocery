@@ -14,7 +14,7 @@ const CartSlice = createSlice({
       if (existingItem) {
         existingItem.quantity += action.payload.quantity;
       } else {
-        state.cart.push(action.payload);
+        state.cart.push({...action.payload,  quantity: action.payload.quantity|| 1});
       }
       state.total += action.payload.price;
     },

@@ -12,6 +12,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Plus, Minus, ShoppingBag, Truck, CreditCard } from "lucide-react";
 import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const Cart = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -46,6 +47,7 @@ export const Cart = () => {
   const cart = useSelector((state) => state.cart);
   console.log(cart.cart, products);
   const cartProducts = cart.cart;
+  console.log(cartProducts);
   const updateQuantity = (id, change) => {
     // setProducts(
     //   products
@@ -63,6 +65,10 @@ export const Cart = () => {
   //   0
   // );
   const total = useSelector((state)=>state.cart.total)
+  const navigate = useNavigate();
+  const createOrder = ()=>{
+    navigate("/placeorder")
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
@@ -140,7 +146,7 @@ export const Cart = () => {
                     <Minus className="h-4 w-4" />
                   </Button>
                   <span className="mx-2 font-semibold text-green-800">
-                    {product.quantity}
+                    {product.quantity} 
                   </span>
                   <Button
                     onClick={() => updateQuantity(product.id, 1)}
@@ -162,7 +168,7 @@ export const Cart = () => {
           </CardFooter>
         </Card>
 
-        <Button className="w-full bg-green-500 hover:bg-green-600 text-white text-lg py-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1">
+        <Button onClick = {createOrder } className="w-full bg-green-500 hover:bg-green-600 text-white text-lg py-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1">
           <CreditCard className="mr-2" /> Proceed to Payment
         </Button>
       </div>

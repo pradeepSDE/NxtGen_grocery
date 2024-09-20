@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { GetAuthState } from "./store/AuthState";
 import { PrivateRoutes, ProtectedRoute } from "./components/protectedRoutes";
 import { setCart, setEntireCart } from "./store/slices/cartSlice";
+import { OrderConfirmation } from "./pages/OrderConfirmation";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 function App() {
@@ -49,7 +50,8 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
         </Route>
 
-        <Route path="/products" element={<Products />} />
+        <Route path="/placeorder" element={<OrderConfirmation />} />              
+        <Route path="/products" element={<Products />} />              
         <Route element={<PrivateRoutes />}>
           <Route path="/cart" element={<Cart />} />
         </Route>
