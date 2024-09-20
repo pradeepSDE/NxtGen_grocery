@@ -94,6 +94,7 @@ export const DropDownProfile = () => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const handleSignOut = async () => {
     try {
       const response = await axios.get("/logout", { withCredentials: true });
@@ -123,9 +124,9 @@ export const DropDownProfile = () => {
         <DropdownMenuContent className="w-56" align="end">
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">John Doe</p>
+              <p className="text-sm font-medium leading-none">{user.name}</p>
               <p className="text-xs leading-none text-green-600">
-                john@example.com
+               {user.email}
               </p>
             </div>
           </DropdownMenuLabel>

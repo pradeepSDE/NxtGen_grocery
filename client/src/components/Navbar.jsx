@@ -3,13 +3,14 @@ import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DropDownProfile } from "./DropdownProfile";
 import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const cart = useSelector((state) => state.cart);
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-gradient-to-r from-green-400 to-teal-500 p-4 shadow-lg">
@@ -36,16 +37,17 @@ export default function Navbar() {
               variant="ghost"
               size="icon"
               className="relative text-white hover:text-yellow-400 transition-colors"
+              onClick={() => navigate("/cart")}
             >
               <Link to={"/cart"}>
-              <ShoppingCart className="h-6 w-6" />
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {cart.cart.length}
-              </span>
+                <ShoppingCart className="h-6 w-6" />
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.cart.length}
+                </span>
               </Link>
             </Button>
-           
-              <DropDownProfile/>
+
+            <DropDownProfile />
           </div>
 
           {/* Mobile Menu */}
@@ -62,10 +64,11 @@ export default function Navbar() {
               variant="ghost"
               size="icon"
               className="relative text-white hover:text-yellow-400 transition-colors"
+              onClick={() => navigate("/cart")}
             >
               <ShoppingCart className="h-6 w-6" />
               <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                3
+                {cart.cart.length}
               </span>
             </Button>
             <Sheet>
@@ -82,9 +85,13 @@ export default function Navbar() {
                 <nav className="flex flex-col space-y-4">
                   <Button variant="ghost" className="justify-start">
                     <User className="mr-2 h-4 w-4" />
-                    profile
+                    Profile
                   </Button>
-                  <Button variant="ghost" className="justify-start">
+                  <Button
+                    onClick={() => navigate("/cart")}
+                    variant="ghost"
+                    className="justify-start"
+                  >
                     <ShoppingCart className="mr-2 h-4 w-4" />
                     Cart
                   </Button>
