@@ -5,10 +5,11 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store/store'
-
+import { Toaster } from "@/components/ui/sonner"
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+    <Toaster richColors={true}  position="top-center" expand={false} />
     < Provider store={store}>
     <App />
     </Provider>

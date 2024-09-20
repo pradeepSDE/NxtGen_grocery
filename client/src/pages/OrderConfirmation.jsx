@@ -13,12 +13,15 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CreditCard, Banknote } from "lucide-react";
-import { useSelector } from "react-redux";
-
-// Mock data for order summary
-
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "sonner";
+import { clearCart, setCart } from "@/store/slices/cartSlice";
+import { useNavigate } from "react-router-dom";
 export const OrderConfirmation = () => {
   const orderItems = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
+  const navigate   = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("stripe");
   const total = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -27,8 +30,36 @@ export const OrderConfirmation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission (Stripe or COD)
-    console.log("Processing order with payment method:", paymentMethod);
+    placeOrder();
+  };
+  const totalAmount = useSelector((state) => state.cart.total);
+  const user = useSelector((state) => state.auth.user);
+  const placeOrder = async () => {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    const orderData = {
+      user,
+      cart,
+      total: totalAmount,
+      paymentStatus: "pending",
+    };
+    try {
+      const response = await axios.post("/api/orders", orderData, {
+        withCredentials: true,
+      });
+      console.log(response);
+      if(response.data.error){
+       toast.error(response.data.error, "error");
+      }
+      else{
+        toast.success("Order Placed Successfully", "success");
+        localStorage.removeItem("cart");
+        dispatch(clearCart());
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    console.log("Order Placed");
   };
 
   return (

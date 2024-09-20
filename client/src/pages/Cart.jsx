@@ -45,25 +45,11 @@ export const Cart = () => {
   ]);
 
   const cart = useSelector((state) => state.cart);
-  console.log(cart.cart, products);
   const cartProducts = cart.cart;
   console.log(cartProducts);
   const updateQuantity = (id, change) => {
-    // setProducts(
-    //   products
-    //     .map((product) =>
-    //       product.id === id
-    //         ? { ...product, quantity: Math.max(0, product.quantity + change) }
-    //         : product
-    //     )
-    //     .filter((product) => product.quantity > 0)
-    // );
+ 
   };
-
-  // const total = products.reduce(
-  //   (sum, product) => sum + product.price * product.quantity,
-  //   0
-  // );
   const total = useSelector((state)=>state.cart.total)
   const navigate = useNavigate();
   const createOrder = ()=>{
@@ -120,7 +106,7 @@ export const Cart = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {cartProducts.map((product) => (
+            {cartProducts?.map((product) => (
               <div
                 key={product.id}
                 className="flex items-center py-4 border-b border-green-200 last:border-b-0"
@@ -134,7 +120,7 @@ export const Cart = () => {
                   <h3 className="font-semibold text-green-800">
                     {product.name}
                   </h3>
-                  <p className="text-green-600">${product.price.toFixed(2)}</p>
+                  <p className="text-green-600">${product?.price?.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center">
                   <Button
@@ -163,7 +149,7 @@ export const Cart = () => {
           <CardFooter className="flex justify-between items-center">
             <div className="text-lg font-semibold text-green-800">Total:</div>
             <div className="text-2xl font-bold text-green-600">
-              ${total.toFixed(2)}
+              ${total?.toFixed(2)}
             </div>
           </CardFooter>
         </Card>
