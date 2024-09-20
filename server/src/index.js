@@ -23,6 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/", require("./routes/authRoute"));
 app.use(express.urlencoded({ extended: false }));
+app.use('/',require('./helper/authCheck'))
 const port = 8000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

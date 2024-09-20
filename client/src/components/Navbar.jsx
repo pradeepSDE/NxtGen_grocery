@@ -15,7 +15,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to={"/"}>
-            <div className="text-2xl font-bold text-white">🍎 FreshMart</div>
+            <div className="text-2xl font-bold text-white">NxtGen</div>
           </Link>
 
           {/* Desktop Menu */}

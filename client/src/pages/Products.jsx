@@ -11,6 +11,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { ShoppingCart, Filter, X, XCircle } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCart } from "@/store/slices/cartSlice";
 
 export const Products = () => {
   const initialProducts = [
@@ -88,6 +90,7 @@ export const Products = () => {
 
   const categories = Array.from(new Set(products.map((p) => p.category)));
   const brands = Array.from(new Set(products.map((p) => p.brand)));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const filtered = products.filter(
@@ -119,6 +122,19 @@ export const Products = () => {
     return typeof price === "number" ? `$${price.toFixed(2)}` : "N/A";
   };
 
+  const handleAddToCart = (product) => {
+    dispatch(setCart(product));
+    const currentCart  = JSON.parse(localStorage.getItem('cart')) || []
+    const existingItem = currentCart.find(item => item.id === product.id)
+    // console.log(exist)
+    if(existingItem){
+      existingItem.quantity += 1;
+    }else{
+      currentCart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(currentCart));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -136,13 +152,13 @@ export const Products = () => {
               <Button
                 className="flex items-center gap-2 text-green-700 font-medium"
                 onClick={() => {
-                    setSelectedBrands([])
-                    setSelectedCategories([])
-                    setPriceRange([0,10])
+                  setSelectedBrands([]);
+                  setSelectedCategories([]);
+                  setPriceRange([0, 10]);
                 }}
                 variant="outline"
               >
-                <XCircle/>
+                <XCircle />
                 Clear all filters
               </Button>
             </CardHeader>
@@ -321,7 +337,10 @@ export const Products = () => {
                       </p>
                     </CardContent>
                     <CardFooter className="p-4 pt-0">
-                      <Button className="w-full bg-green-500 hover:bg-green-600 text-white">
+                      <Button
+                        onClick={() => handleAddToCart(product)}
+                        className="w-full bg-green-500 hover:bg-green-600 text-white"
+                      >
                         <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                       </Button>
                     </CardFooter>

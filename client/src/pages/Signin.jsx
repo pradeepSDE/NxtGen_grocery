@@ -15,21 +15,30 @@ import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { GetAuthState } from "@/store/AuthState";
+import { useDispatch } from "react-redux";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
-  const handleSignup = async(e) => {
+  const dispatch = useDispatch();
+  const handleSignin = async (e) => {
     e.preventDefault();
-    const user = await axios.post('/signin', { email, password })
-    if(user.data.error){
-      return alert(user.data.error)
-    }else{
-      alert("Login successful")
-navigate("/products")
+    try {
+      const user = await axios.post("/signin", { email, password });
+      if (user.data.error) {
+        alert(user.data.error);
+      } else {
+        alert("Login successful");
+        GetAuthState(dispatch);
+        navigate("/products");
+      }
+    } catch (err) {
+      console.log(err);
     }
+
     console.log("Signup with:", { name, email, password });
   };
 
@@ -84,7 +93,7 @@ navigate("/products")
               </span>
             </div>
           </div>
-          <form onSubmit={handleSignup} className="space-y-4">
+          <form onSubmit={handleSignin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-green-700">
                 Email
