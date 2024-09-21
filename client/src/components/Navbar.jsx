@@ -109,6 +109,7 @@ export default function Navbar({setSearchQuery}) {
             <div className="relative">
               <Input
                 type="search"
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for groceries..."
                 className="w-full pl-10 pr-4 py-2 rounded-full border-none focus:ring-2 focus:ring-yellow-400"
               />
