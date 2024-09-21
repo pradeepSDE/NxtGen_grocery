@@ -12,16 +12,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CreditCard, Banknote } from "lucide-react";
+import { CreditCard, Banknote, ArrowRight, Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "sonner";
 import { clearCart, setCart } from "@/store/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 export const OrderConfirmation = () => {
+  const [loading, setLoading] = useState(false);
   const orderItems = useSelector((state) => state.cart.cart);
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("stripe");
   const total = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -30,11 +32,16 @@ export const OrderConfirmation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(!auth.isAuthenticated){
+     toast.info("Please login to place order", "info");
+     return;
+    }
     placeOrder();
   };
   const totalAmount = useSelector((state) => state.cart.total);
   const user = useSelector((state) => state.auth.user);
   const placeOrder = async () => {
+    setLoading(true);
     const cart = JSON.parse(localStorage.getItem("cart"));
     const orderData = {
       user,
@@ -46,20 +53,21 @@ export const OrderConfirmation = () => {
       const response = await axios.post("/api/orders", orderData, {
         withCredentials: true,
       });
-      console.log(response);
-      if(response.data.error){
-       toast.error(response.data.error, "error");
-      }
-      else{
+      if (response.data.error) {
+        setLoading(false);
+        toast.error(response.data.error, "error");
+      } else {
+        setLoading(false);
         toast.success("Order Placed Successfully", "success");
         localStorage.removeItem("cart");
         dispatch(clearCart());
         navigate("/");
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
+      toast.error("Something went wrong", "error");
     }
-    console.log("Order Placed");
   };
 
   return (
@@ -133,12 +141,24 @@ export const OrderConfirmation = () => {
 
                 <Button
                   type="submit"
+                  disabled={loading}
+                  className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                >
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {paymentMethod === "stripe"
+                    ? "Pay Now"
+                    : "Place Order (Cash on Delivery)"}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+
+                {/* <Button
+                  type="submit"
                   className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
                 >
                   {paymentMethod === "stripe"
                     ? "Pay Now"
                     : "Place Order (Cash on Delivery)"}
-                </Button>
+                </Button> */}
               </form>
             </CardContent>
           </Card>

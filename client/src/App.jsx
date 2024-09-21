@@ -10,7 +10,7 @@ import { Cart } from "./pages/Cart";
 import { Products } from "./pages/Products";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GetAuthState } from "./store/AuthState";
 import { PrivateRoutes, ProtectedRoute } from "./components/protectedRoutes";
 import { setCart, setEntireCart } from "./store/slices/cartSlice";
@@ -39,10 +39,10 @@ function App() {
     );
     dispatch(setEntireCart({ cart: cart, total: total }));
   }, [dispatch]);
-
+ const [searchQuery, setSearchQuery] = useState("");
   return (
     <>
-      <Navbar />
+      <Navbar setSearchQuery = {setSearchQuery} />
       <Routes>
         <Route path="/" element={<Home />} />
 
@@ -52,7 +52,7 @@ function App() {
         </Route>
 
         <Route path="/placeorder" element={<OrderConfirmation />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" element={<Products searchQuery = {searchQuery} />} />
         <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/cart" element={<Cart />} />
        

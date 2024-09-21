@@ -7,7 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { DropDownProfile } from "./DropdownProfile";
 import { useSelector } from "react-redux";
 
-export default function Navbar() {
+export default function Navbar({setSearchQuery}) {
+ 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const cart = useSelector((state) => state.cart);
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function Navbar() {
                 <Input
                   type="search"
                   placeholder="Search for groceries..."
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 rounded-full border-none focus:ring-2 focus:ring-yellow-400"
                 />
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />

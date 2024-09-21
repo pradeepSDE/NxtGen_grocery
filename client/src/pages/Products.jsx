@@ -14,7 +14,8 @@ import { ShoppingCart, Filter, X, XCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 
-export const Products = () => {
+export const Products = ({searchQuery}) => {
+  console.log(searchQuery)
   const initialProducts = [
     {
       id: 1,
@@ -95,6 +96,7 @@ export const Products = () => {
   useEffect(() => {
     const filtered = products.filter(
       (product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
         product.price >= priceRange[0] &&
         product.price <= priceRange[1] &&
         (selectedCategories.length === 0 ||
@@ -102,7 +104,7 @@ export const Products = () => {
         (selectedBrands.length === 0 || selectedBrands.includes(product.brand))
     );
     setFilteredProducts(filtered);
-  }, [products, priceRange, selectedCategories, selectedBrands]);
+  }, [products, priceRange, selectedCategories, selectedBrands, searchQuery]);
 
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
@@ -123,17 +125,17 @@ export const Products = () => {
   };
 
   const handleAddToCart = (product) => {
-    const productWithQuantity = { ...product, quantity: product.quantity || 1 }
+    const productWithQuantity = { ...product, quantity: product.quantity || 1 };
     dispatch(setCart(productWithQuantity));
-    const currentCart  = JSON.parse(localStorage.getItem('cart')) || []
-    const existingItem = currentCart.find(item => item.id === product.id)
+    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingItem = currentCart.find((item) => item.id === product.id);
     // console.log(exist)
-    if(existingItem){
+    if (existingItem) {
       existingItem.quantity += 1;
-    }else{
+    } else {
       currentCart.push({ ...product, quantity: 1 });
     }
-    localStorage.setItem('cart', JSON.stringify(currentCart));
+    localStorage.setItem("cart", JSON.stringify(currentCart));
   };
 
   return (

@@ -17,8 +17,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { GetAuthState } from "@/store/AuthState";
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export const SignIn = () => {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -26,20 +29,23 @@ export const SignIn = () => {
   const dispatch = useDispatch();
   const handleSignin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const user = await axios.post("/signin", { email, password });
       if (user.data.error) {
-        alert(user.data.error);
+        setLoading(false);
+        toast.error(user.data.error);
       } else {
-        alert("Login successful");
+        setLoading(false);
+        toast.success("Logged in successfully");
         GetAuthState(dispatch);
         navigate("/products");
       }
     } catch (err) {
+      setLoading(false);
       console.log(err);
+      toast.error("Something went wrong");
     }
-
-    console.log("Signup with:", { name, email, password });
   };
 
   const handleGoogleSignup = () => {
@@ -119,6 +125,7 @@ export const SignIn = () => {
                 <Input
                   id="password"
                   type="password"
+                  placeholder="********"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 border-green-300 focus:border-green-500 focus:ring-green-500"
@@ -127,24 +134,27 @@ export const SignIn = () => {
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-green-400" />
               </div>
             </div>
+
             <Button
               type="submit"
+              disabled={loading}
               className="w-full bg-green-500 hover:bg-green-600 text-white"
             >
-              SignIn
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Sign In
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-green-700">
-            Create Account?{" "}
+            New to NxtGen?{" "}
             <Link
               to={"/signup"}
               className="text-green-600 font-semibold hover:underline"
             >
               {" "}
-              SignUp
+              Create an Account
             </Link>
           </p>
         </CardFooter>
