@@ -51,12 +51,11 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
         </Route>
 
-        <Route path="/placeorder" element={<OrderConfirmation />} />              
-        <Route path="/products" element={<Products />} />              
-          <Route path="/orderhistory" element={<OrderHistory />} />
-        <Route element={<PrivateRoutes />}>
+        <Route path="/placeorder" element={<OrderConfirmation />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/cart" element={<Cart />} />
-        </Route>
+       
       </Routes>
     </>
   );
