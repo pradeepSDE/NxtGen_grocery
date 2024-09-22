@@ -16,6 +16,7 @@ import { PrivateRoutes, ProtectedRoute } from "./components/protectedRoutes";
 import { setCart, setEntireCart } from "./store/slices/cartSlice";
 import { OrderConfirmation } from "./pages/OrderConfirmation";
 import { OrderHistory } from "./pages/orderHistory/OrderHistory";
+import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path="/products" element={<Products searchQuery = {searchQuery} />} />
         <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/productdetails/:id" element={<ProductDetails />} />
        
       </Routes>
     </>

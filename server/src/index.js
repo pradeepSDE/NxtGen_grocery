@@ -26,6 +26,7 @@ app.use("/", require("./routes/authRoute"));
 app.use(express.urlencoded({ extended: false }));
 app.use('/',require('./helper/authCheck'))
 app.use('/api',authenticateJWT ,require('./routes/orderRoute'))
+app.use('/product',require('./routes/productRoute'))
 const port = 8000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

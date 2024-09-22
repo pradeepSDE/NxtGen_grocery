@@ -135,10 +135,10 @@ export const DropDownProfile = () => {
             <UserCircle className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick= {()=>navigate('/orderhistory')} >
             <PackageCheck className="mr-2 h-4 w-4" />
             Order History
-          </DropdownMenuItem>
+          </DropdownMenuItem >
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             Settings</DropdownMenuItem>

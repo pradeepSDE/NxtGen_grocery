@@ -13,6 +13,7 @@ import { Slider } from "@/components/ui/slider";
 import { ShoppingCart, Filter, X, XCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
+import { ProductCard } from "./components/ProductCard";
 
 export const Products = ({ searchQuery }) => {
   console.log(searchQuery);
@@ -82,13 +83,49 @@ export const Products = ({ searchQuery }) => {
       image: "/placeholder.svg?height=200&width=200",
     },
     {
-      id: 9,
+      id: "66f04bc2a7096f624655cb32",
       name: "Aashirwaad Atta 5kg",
-      price: 240,
+      price: 2,
       category: "Atta & Flours",
       brand: "ITC",
       image:
-        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bigbasket.com%2Fpd%2F40127506%2Faashirvaad-shudh-chakki-atta-5-kg%2F&psig=AOvVaw30CnE6C9CppywvxchU7QY6&ust=1727032526687000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNijrtTf1IgDFQAAAAAdAAAAABAR",
+        "https://imgs.search.brave.com/fanPfyf4F4PJdgMPCHbskAhZ7AueDbBoX8iWsRdR_Dw/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/amlvbWFydC5jb20v/aW1hZ2VzL3Byb2R1/Y3Qvb3JpZ2luYWwv/NDkwMDAwMDQxL2Fh/c2hpcnZhYWQtc2h1/ZGgtY2hha2tpLWF0/dGEtMTAta2ctcHJv/ZHVjdC1pbWFnZXMt/bzQ5MDAwMDA0MS1w/NDkwMDAwMDQxLTAt/MjAyNDAxMjYwODUx/LmpwZz9pbT1SZXNp/emU9KDE1MCwxNTAp",
+    },
+    {
+      id: 10,
+      name: "Maggi noodles 72g",
+      price: 2,
+      category: "Noodles & Pasta",
+      brand: "Nestle",
+      image:
+        "https://imgs.search.brave.com/fanPfyf4F4PJdgMPCHbskAhZ7AueDbBoX8iWsRdR_Dw/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/amlvbWFydC5jb20v/aW1hZ2VzL3Byb2R1/Y3Qvb3JpZ2luYWwv/NDkwMDAwMDQxL2Fh/c2hpcnZhYWQtc2h1/ZGgtY2hha2tpLWF0/dGEtMTAta2ctcHJv/ZHVjdC1pbWFnZXMt/bzQ5MDAwMDA0MS1w/NDkwMDAwMDQxLTAt/MjAyNDAxMjYwODUx/LmpwZz9pbT1SZXNp/emU9KDE1MCwxNTAp",
+    },
+    {
+      id: 11,
+      name: "Egg Crates",
+      price: 2,
+      category: "Dairy",
+      brand: "fresh",
+      image:
+        "https://imgs.search.brave.com/sRyePyudYg1ptCx-SqFLybjwaqvJ1_SfrEJOH3Vv0sc/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/ODFBN014cjk1ZEwu/anBn",
+    },
+    {
+      id: 12,
+      name: "Fortune soya oil 1L",
+      price: 2,
+      category: "edible oils",
+      brand: "fortune",
+      image:
+        "https://5.imimg.com/data5/WH/LC/MY-48490939/1-kg-refined-oil-1000x1000.jpg",
+    },
+    {
+      id: 13,
+      name: "Fortune chana besan 500gm",
+      price: 2,
+      category: "Atta & Flours",
+      brand: "fortune",
+      image:
+        "https://imgs.search.brave.com/EePz1QvfWhxx5ZVVHF6OZd0LXmkIAgVu0JhvEFVfXpA/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NTFmVG5iaTgrOUwu/anBn",
     },
   ];
   const [products, setProducts] = useState(initialProducts);
@@ -326,37 +363,12 @@ export const Products = ({ searchQuery }) => {
             {filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden">
-                    <CardHeader className="p-0">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-48 object-cover"
-                      />
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <CardTitle className="text-lg font-semibold mb-2 text-green-800">
-                        {product.name}
-                      </CardTitle>
-                      <p className="text-sm text-green-600 mb-2">
-                        {product.category}
-                      </p>
-                      <p className="text-sm text-green-600 mb-2">
-                        {product.brand}
-                      </p>
-                      <p className="text-lg font-bold text-green-700">
-                        {formatPrice(product.price)}
-                      </p>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0">
-                      <Button
-                        onClick={() => handleAddToCart(product)}
-                        className="w-full bg-green-500 hover:bg-green-600 text-white"
-                      >
-                        <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
-                      </Button>
-                    </CardFooter>
-                  </Card>
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    handleAddToCart={handleAddToCart}
+                    formatPrice={formatPrice}
+                  />
                 ))}
               </div>
             ) : (
