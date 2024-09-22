@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const app = express();
-const authenticateJWT = require('./midldlewares/authenticateJWT');
+const authenticateJWT = require("./midldlewares/authenticateJWT");
 app.use(
   session({
     secret: "your-secret-key", // Change this to a strong secret key
@@ -18,18 +18,35 @@ app.use(
 );
 
 // Initialize Passport and session management
+const corsOptions = {
+  credentials: true,
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://nxt-gen-grocery-fe.vercel.app/",
+  ],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", require("./routes/authRoute"));
 app.use(express.urlencoded({ extended: false }));
-app.use('/',require('./helper/authCheck'))
-app.use('/api',authenticateJWT ,require('./routes/orderRoute'))
-app.use('/product',require('./routes/productRoute'))
+app.use("/", require("./helper/authCheck"));
+app.use("/api", authenticateJWT, require("./routes/orderRoute"));
+app.use("/product", require("./routes/productRoute"));
 const port = 8000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 //db conection //
 mongoose
