@@ -5,7 +5,7 @@ const GoogleStrategy = require("passport-google-oidc");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const test = (req, res) => {
-  res.json("Hello World!");
+  res.json("Hello World! from ");
 };
 passport.use(
   new GoogleStrategy(
