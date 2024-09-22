@@ -11,11 +11,27 @@ const createOrder = async (req, res) => {
     });
     const response = await newOrder.save();
     if (!response) {
-        res.json({error:"order failed"})
+      res.json({ error: "order failed" });
     }
     res.json({ message: "order placed successfully" });
   } catch (error) {
     console.log(error);
   }
 };
-module.exports = { createOrder };
+
+const getOrderHistory = async (req, res) => {
+  console.log(req.user)
+  const id = req.user.id;
+  // console.log(id);
+  try {
+    const orders = await Order.find({ userId: id });
+    if (!orders) {
+      res.json({ error: "no orders found" });
+    }
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "something went wrong" });
+  }
+};
+module.exports = { createOrder, getOrderHistory };

@@ -15,7 +15,7 @@ import { GetAuthState } from "./store/AuthState";
 import { PrivateRoutes, ProtectedRoute } from "./components/protectedRoutes";
 import { setCart, setEntireCart } from "./store/slices/cartSlice";
 import { OrderConfirmation } from "./pages/OrderConfirmation";
-import { OrderHistory } from "./pages/OrderHistory";
+import { OrderHistory } from "./pages/orderHistory/OrderHistory";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 function App() {

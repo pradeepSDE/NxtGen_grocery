@@ -14,8 +14,8 @@ import { ShoppingCart, Filter, X, XCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 
-export const Products = ({searchQuery}) => {
-  console.log(searchQuery)
+export const Products = ({ searchQuery }) => {
+  console.log(searchQuery);
   const initialProducts = [
     {
       id: 1,
@@ -80,6 +80,15 @@ export const Products = ({searchQuery}) => {
       category: "Vegetables",
       brand: "Green Farms",
       image: "/placeholder.svg?height=200&width=200",
+    },
+    {
+      id: 9,
+      name: "Aashirwaad Atta 5kg",
+      price: 240,
+      category: "Atta & Flours",
+      brand: "ITC",
+      image:
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bigbasket.com%2Fpd%2F40127506%2Faashirvaad-shudh-chakki-atta-5-kg%2F&psig=AOvVaw30CnE6C9CppywvxchU7QY6&ust=1727032526687000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNijrtTf1IgDFQAAAAAdAAAAABAR",
     },
   ];
   const [products, setProducts] = useState(initialProducts);

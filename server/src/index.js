@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const app = express();
+const authenticateJWT = require('./midldlewares/authenticateJWT');
 app.use(
   session({
     secret: "your-secret-key", // Change this to a strong secret key
@@ -24,7 +25,7 @@ app.use(cookieParser());
 app.use("/", require("./routes/authRoute"));
 app.use(express.urlencoded({ extended: false }));
 app.use('/',require('./helper/authCheck'))
-app.use('/api',require('./routes/orderRoute'))
+app.use('/api',authenticateJWT ,require('./routes/orderRoute'))
 const port = 8000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
