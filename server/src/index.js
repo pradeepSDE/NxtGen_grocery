@@ -35,6 +35,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(cookieParser());
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 app.use("/", require("./routes/authRoute"));
 app.use(express.urlencoded({ extended: false }));
 app.use("/", require("./helper/authCheck"));
@@ -45,9 +48,6 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 //db conection //
 mongoose
   .connect(process.env.MONGO_URL)
