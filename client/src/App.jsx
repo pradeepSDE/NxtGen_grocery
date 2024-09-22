@@ -18,7 +18,8 @@ import { OrderConfirmation } from "./pages/OrderConfirmation";
 import { OrderHistory } from "./pages/orderHistory/OrderHistory";
 import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000";
+// axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
 function App() {
   const dispatch = useDispatch(); // Get dispatch from useDispatch
   const initializeCart = () => {
