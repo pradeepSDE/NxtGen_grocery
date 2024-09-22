@@ -35,12 +35,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(cookieParser());
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello World!");
+// });
 app.use("/", require("./routes/authRoute"));
 app.use(express.urlencoded({ extended: false }));
-app.use("/", require("./helper/authCheck"));
+// app.use("/", require("./helper/authCheck"));
 app.use("/api", authenticateJWT, require("./routes/orderRoute"));
 app.use("/product", require("./routes/productRoute"));
 const port = 8000;
