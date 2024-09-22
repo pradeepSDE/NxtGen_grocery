@@ -35,7 +35,7 @@ export const OrderHistory = () => {
         <h1 className="text-3xl font-bold text-green-800 mb-8 text-center">
           Your Order History
         </h1>
-
+        <h3 className="text-xl font-semibold text-green-800  text-center">Showing Last 10 Orders</h3>
         {hasOrders ? (
           <div className="space-y-6">
             {pastOrders.map((order) => (

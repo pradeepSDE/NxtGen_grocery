@@ -24,7 +24,7 @@ const getOrderHistory = async (req, res) => {
   const id = req.user.id;
   // console.log(id);
   try {
-    const orders = await Order.find({ userId: id });
+    const orders = await Order.find({ userId: id }).limit(10).sort({ date: -1 });
     if (!orders) {
       res.json({ error: "no orders found" });
     }

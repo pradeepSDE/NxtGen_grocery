@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, User, Search, Menu, X, Package } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DropDownProfile } from "./DropdownProfile";
 import { useSelector } from "react-redux";
 
-export default function Navbar({setSearchQuery}) {
- 
+export default function Navbar({ setSearchQuery }) {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const cart = useSelector((state) => state.cart);
   const navigate = useNavigate();
-
+  const page = useLocation().pathname;
   return (
     <nav className="bg-gradient-to-r from-green-400 to-teal-500 p-4 shadow-lg">
       <div className="container mx-auto">
@@ -25,24 +24,34 @@ export default function Navbar({setSearchQuery}) {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4 flex-1 justify-end">
             <div className="max-w-md w-full mx-4">
-              <div className="relative">
-                <Input
-                  type="search"
-                  placeholder="Search for groceries..."
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-full border-none focus:ring-2 focus:ring-yellow-400"
-                />
-                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
-              </div>
+              {page === "/products" && (
+                <div className="relative ">
+                  <Input
+                    type="search"
+                    placeholder="Search for groceries..."
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 rounded-full border-none focus:ring-2 focus:ring-yellow-400"
+                  />
+                  <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+                </div>
+              )}
             </div>
             <Button
               variant="ghost"
+              className="justify-start text-white rounded-full hover:text-black transition-colors"
+              onClick={() => navigate("/products")}
+            >
+              <Package className="mr-2 h-5 w-5" />
+              Products
+            </Button>
+            <Button
+              variant="ghost"
               size="icon"
-              className="relative text-white hover:text-yellow-400 transition-colors"
+              className="relative rounded-full text-white p-2 hover:text-black transition-colors"
               onClick={() => navigate("/cart")}
             >
               <Link to={"/cart"}>
-                <ShoppingCart className="h-6 w-6" />
+                <ShoppingCart className="h-5 w-5" />
                 <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {cart.cart.length}
                 </span>
@@ -106,15 +115,17 @@ export default function Navbar({setSearchQuery}) {
         {/* Mobile Search Bar */}
         {isSearchVisible && (
           <div className="mt-4 md:hidden">
-            <div className="relative">
-              <Input
-                type="search"
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for groceries..."
-                className="w-full pl-10 pr-4 py-2 rounded-full border-none focus:ring-2 focus:ring-yellow-400"
-              />
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
-            </div>
+            {page === "/products" && (
+              <div className="relative">
+                <Input
+                  type="search"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for groceries..."
+                  className="w-full pl-10 pr-4 py-2 rounded-full border-none focus:ring-2 focus:ring-yellow-400"
+                />
+                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+              </div>
+            )}
           </div>
         )}
       </div>

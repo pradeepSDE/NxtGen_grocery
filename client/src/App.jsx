@@ -3,11 +3,11 @@
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import SignupPage from "./pages/Signup";
 import { SignIn } from "./pages/Signin";
 import { Cart } from "./pages/Cart";
-import { Products } from "./pages/Products";
+import { Products } from "./pages/Products/Products";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
