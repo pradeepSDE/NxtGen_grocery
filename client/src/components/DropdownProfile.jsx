@@ -1,82 +1,5 @@
-// import { Button } from "@/components/ui/button";
-// import {
-//   DropdownMenu,
-//   DropdownMenuCheckboxItem,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { removeUser } from "@/store/slices/authSlice";
-// import axios from "axios";
-// import { LogIn, LogOut, User, User2 } from "lucide-react";
-
-// import { useDispatch, useSelector } from "react-redux";
-// import { Link, useNavigate } from "react-router-dom";
-
-// export const DropDownProfile = () => {
-//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
-//   const handleLogout = async () => {
-//     try {
-//       const response = await axios.get("/logout", { withCredentials: true });
-//       console.log(response);
-//       if (response) {
-//         console.log(response);
-//         dispatch(removeUser());
-//         navigate("/");
-//       }
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   return (
-//     <DropdownMenu>
-//       <DropdownMenuTrigger asChild>
-//         <Button
-//           variant="ghost"
-//           size="icon"
-//           className="text-white rounded-full  hover:text-yellow-400 transition-colors"
-//         >
-//           <User className="h-6 w-6" />
-//         </Button>
-//       </DropdownMenuTrigger>
-//       <DropdownMenuContent className="w-56">
-//         <DropdownMenuLabel>Profile</DropdownMenuLabel>
-//         <DropdownMenuSeparator />
-
-//         {isAuthenticated ? (
-//           <DropdownMenuItem
-//             onClick={handleLogout}
-//             className="flex gap-2 font-medium items-center focus:text-red-500"
-//           >
-//             <LogOut className="h-4 w-4" />
-//             <span className="flex gap-2 justify-center items-center font-medium">
-//               Log Out
-//             </span>
-//           </DropdownMenuItem>
-//         ) : (
-//           <DropdownMenuItem
-//             onClick={() => {
-//               navigate("/signin");
-//             }}
-//             className="flex gap-2 items-center font-medium focus:text-green-500"
-//           >
-//             <LogIn className="h-4 w-4" />
-//             <span>SignIn</span>
-//           </DropdownMenuItem>
-//         )}
-//       </DropdownMenuContent>
-//     </DropdownMenu>
-//   );
-// };
-
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { UserCircle, LogOut, PackageCheck, Settings } from "lucide-react";
+import { UserCircle, LogOut, Settings, History } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -85,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { removeUser } from "@/store/slices/authSlice";
@@ -135,13 +58,14 @@ export const DropDownProfile = () => {
             <UserCircle className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick= {()=>navigate('/orderhistory')} >
-            <PackageCheck className="mr-2 h-4 w-4" />
+          <DropdownMenuItem onClick={() => navigate("/orderhistory")}>
+            <History className="mr-2 h-4 w-4" />
             Order History
-          </DropdownMenuItem >
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
-            Settings</DropdownMenuItem>
+            Settings
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
             <LogOut className="mr-2 h-4 w-4" />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,10 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Plus, Minus, ShoppingBag, Truck, CreditCard } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
+import { handleAddToCart, updateQuantity } from "@/utils/AddToCart";
+import { setCart } from "@/store/slices/cartSlice";
 
 export const Cart = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -24,7 +26,7 @@ export const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const cartProducts = cart.cart;
   console.log(cartProducts);
-  const updateQuantity = (id, change) => {};
+
   const total = useSelector((state) => state.cart.total);
   const navigate = useNavigate();
   const createOrder = () => {
@@ -34,17 +36,20 @@ export const Cart = () => {
     }
     navigate("/placeorder");
   };
-
   const updateAddress = async () => {
     const response = await axios.put(`/api/users/${user?.id}`, {
       address: address, // Wrap the address in an object
     });
     console.log("update address", response.data);
   };
+  useEffect(() => {
+    updateAddress();
+  }, []);
   const handleAddressUpdate = () => {
     updateAddress();
     setIsEditingAddress(false);
   };
+  const dispatch = useDispatch();
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -115,7 +120,9 @@ export const Cart = () => {
                 </div>
                 <div className="flex items-center">
                   <Button
-                    onClick={() => updateQuantity(product.id, -1)}
+                    onClick={() =>
+                      updateQuantity(dispatch, product, "decrease")
+                    }
                     variant="outline"
                     size="icon"
                     className="h-8 w-8 rounded-full p-0 border-green-500 text-green-500 hover:bg-green-50"
@@ -126,7 +133,9 @@ export const Cart = () => {
                     {product.quantity}
                   </span>
                   <Button
-                    onClick={() => updateQuantity(product.id, 1)}
+                    onClick={() =>
+                      updateQuantity(dispatch, product, "increase")
+                    }
                     variant="outline"
                     size="icon"
                     className="h-8 w-8 rounded-full p-0 border-green-500 text-green-500 hover:bg-green-50"

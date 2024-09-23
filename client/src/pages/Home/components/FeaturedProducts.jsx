@@ -1,11 +1,16 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { setCart } from "@/store/slices/cartSlice"
+import { handleAddToCart } from "@/utils/AddToCart"
 import { Plus, ShoppingCart } from "lucide-react"
+import { useDispatch } from "react-redux"
 
 export const FeaturedProducts = ({setVisibleProducts, allProducts, visibleProducts}) => {
     const loadMore = () => {
         setVisibleProducts(prevCount => Math.min(prevCount + 4, allProducts.length))
       }
+      const dispatch = useDispatch();
+
     return(
         <section>
         <h2 className="text-3xl font-bold text-gray-800 mb-6">Featured Products</h2>
@@ -20,7 +25,7 @@ export const FeaturedProducts = ({setVisibleProducts, allProducts, visibleProduc
                 <p className="text-green-600 font-bold text-sm">${product.price.toFixed(2)}</p>
               </CardContent>
               <CardFooter className="p-3 pt-0">
-                <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white text-sm py-1">
+                <Button onClick ={ ()=> handleAddToCart(product,dispatch,setCart)} className="w-full bg-teal-500 hover:bg-teal-600 text-white text-sm py-1">
                   <ShoppingCart className="mr-1 h-4 w-4" /> Add to Cart
                 </Button>
               </CardFooter>
