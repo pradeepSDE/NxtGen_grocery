@@ -1,17 +1,13 @@
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv')
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 const authenticateJWT = (req, res, next) => {
-  const authHeader = req.headers.cookie;
-  console.log(authHeader)
+  const tokenString = req.cookies.token;
 
-  if (authHeader) {
-    const tokenString = authHeader.split(' ')[1];  // Extract token from "Bearer <token>"
-    const token = tokenString.split('=')[1];
+  if (tokenString) {
     try {
-      // Verify the token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;  // Attach decoded user data to req.user
-      next();  // Proceed to the next middleware/controller
+      const decoded = jwt.verify(tokenString, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
     } catch (error) {
       return res.status(403).json({ error: "Invalid token" });
     }

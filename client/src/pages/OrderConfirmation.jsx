@@ -33,9 +33,9 @@ export const OrderConfirmation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(!auth.isAuthenticated){
-     toast.info("Please login to place order", "info");
-     return;
+    if (!auth.isAuthenticated) {
+      toast.info("Please login to place order", "info");
+      return;
     }
     placeOrder();
   };
@@ -55,9 +55,6 @@ export const OrderConfirmation = () => {
       console.log(token);
       const response = await axios.post("/api/orders", orderData, {
         withCredentials: true,
-        // headers: {
-        //   authorization: `Bearer ${token}`
-        // }
       });
       if (response.data.error) {
         setLoading(false);
