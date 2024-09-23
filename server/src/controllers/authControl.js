@@ -108,7 +108,13 @@ const signin = async (req, res) => {
         { id: user._id, name: user.name, email: user.email },
         process.env.JWT_SECRET
       );
-      res.cookie("token", token);
+      // res.cookie("token", token);
+      res.cookie('token', token, {
+        httpOnly: true,       // Ensures the cookie is not accessible via JavaScript
+        secure: true,         // Ensures the cookie is only sent over HTTPS
+        sameSite: 'None',     // Required for cross-origin requests
+        maxAge: 24 * 60 * 60 * 1000,  // 1 day expiration
+      });
 
       return res.json({
         message: "login successful",
