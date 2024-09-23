@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home/Home";
 import SignupPage from "./pages/Signup";
+import ProductForm from "./pages/AddProduct";
 import { SignIn } from "./pages/Signin";
 import { Cart } from "./pages/Cart";
 import { Products } from "./pages/Products/Products";
@@ -59,6 +60,7 @@ function App() {
         <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/productdetails/:id" element={<ProductDetails />} />
+       <Route path="/product/createproduct" element={<ProductForm/>} />
        
       </Routes>
       <Footer/>
