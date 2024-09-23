@@ -20,8 +20,6 @@ import { setLoading } from "@/store/slices/productSlice";
 export const Products = ({ searchQuery }) => {
   console.log(searchQuery);
 
-  
-
   const initialProducts = [
     {
       id: 1,
@@ -31,107 +29,7 @@ export const Products = ({ searchQuery }) => {
       brand: "Nature's Best",
       image: "/placeholder.svg?height=200&width=200",
     },
-    {
-      id: 2,
-      name: "Fresh Spinach",
-      price: 2.49,
-      category: "Vegetables",
-      brand: "Green Farms",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 3,
-      name: "Whole Grain Bread",
-      price: 4.99,
-      category: "Bakery",
-      brand: "Healthy Loaf",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 4,
-      name: "Organic Milk",
-      price: 3.79,
-      category: "Dairy",
-      brand: "Pure Dairy",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 5,
-      name: "Free Range Eggs",
-      price: 5.99,
-      category: "Dairy",
-      brand: "Happy Hens",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 6,
-      name: "Organic Bananas",
-      price: 1.99,
-      category: "Fruits",
-      brand: "Nature's Best",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 7,
-      name: "Whole Wheat Pasta",
-      price: 2.99,
-      category: "Grains",
-      brand: "Pasta Paradise",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 8,
-      name: "Organic Tomatoes",
-      price: 3.49,
-      category: "Vegetables",
-      brand: "Green Farms",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: "66f04bc2a7096f624655cb32",
-      name: "Aashirwaad Atta 5kg",
-      price: 2,
-      category: "Atta & Flours",
-      brand: "ITC",
-      image:
-      "https://imgs.search.brave.com/fanPfyf4F4PJdgMPCHbskAhZ7AueDbBoX8iWsRdR_Dw/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/amlvbWFydC5jb20v/aW1hZ2VzL3Byb2R1/Y3Qvb3JpZ2luYWwv/NDkwMDAwMDQxL2Fh/c2hpcnZhYWQtc2h1/ZGgtY2hha2tpLWF0/dGEtMTAta2ctcHJv/ZHVjdC1pbWFnZXMt/bzQ5MDAwMDA0MS1w/NDkwMDAwMDQxLTAt/MjAyNDAxMjYwODUx/LmpwZz9pbT1SZXNp/emU9KDE1MCwxNTAp",
-    },
-    {
-      id: 10,
-      name: "Maggi noodles 72g",
-      price: 2,
-      category: "Noodles & Pasta",
-      brand: "Nestle",
-      image:
-        "https://imgs.search.brave.com/fanPfyf4F4PJdgMPCHbskAhZ7AueDbBoX8iWsRdR_Dw/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/amlvbWFydC5jb20v/aW1hZ2VzL3Byb2R1/Y3Qvb3JpZ2luYWwv/NDkwMDAwMDQxL2Fh/c2hpcnZhYWQtc2h1/ZGgtY2hha2tpLWF0/dGEtMTAta2ctcHJv/ZHVjdC1pbWFnZXMt/bzQ5MDAwMDA0MS1w/NDkwMDAwMDQxLTAt/MjAyNDAxMjYwODUx/LmpwZz9pbT1SZXNp/emU9KDE1MCwxNTAp",
-    },
-    {
-      id: 11,
-      name: "Egg Crates",
-      price: 2,
-      category: "Dairy",
-      brand: "fresh",
-      image:
-      "https://imgs.search.brave.com/sRyePyudYg1ptCx-SqFLybjwaqvJ1_SfrEJOH3Vv0sc/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/ODFBN014cjk1ZEwu/anBn",
-    },
-    {
-      id: 12,
-      name: "Fortune soya oil 1L",
-      price: 2,
-      category: "edible oils",
-      brand: "fortune",
-      image:
-      "https://5.imimg.com/data5/WH/LC/MY-48490939/1-kg-refined-oil-1000x1000.jpg",
-    },
-    {
-      id: 13,
-      name: "Fortune chana besan 500gm",
-      price: 2,
-      category: "Atta & Flours",
-      brand: "fortune",
-      image:
-      "https://imgs.search.brave.com/EePz1QvfWhxx5ZVVHF6OZd0LXmkIAgVu0JhvEFVfXpA/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NTFmVG5iaTgrOUwu/anBn",
-    },
+
     {
       id: "66f16d352f75e5338caf115f",
       name: "pradeep",
@@ -157,21 +55,21 @@ export const Products = ({ searchQuery }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  
+
   const categories = Array.from(new Set(products.map((p) => p.category)));
   const brands = Array.from(new Set(products.map((p) => p.brand)));
   const dispatch = useDispatch();
   const fetchProducts = async () => {
     setLoading(true);
-    const response = await axios.get('/product/fetchProducts')
-    console.log(response.data)
-    setProducts(response.data)
+    const response = await axios.get("/product/fetchProducts");
+    console.log(response.data);
+    setProducts(response.data);
   };
 
-  useEffect(()=>{
-    fetchProducts()
-  },[products])
-  
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   useEffect(() => {
     const filtered = products.filter(
       (product) =>

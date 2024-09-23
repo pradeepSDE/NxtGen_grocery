@@ -18,9 +18,10 @@ import { OrderConfirmation } from "./pages/OrderConfirmation";
 import { OrderHistory } from "./pages/orderHistory/OrderHistory";
 import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
 import Footer from "./components/Footer";
+import ProductForm from "./pages/AddProduct";
 axios.defaults.withCredentials = true;
-// axios.defaults.baseURL = "http://localhost:8000";
-axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
+axios.defaults.baseURL = "http://localhost:8000";
+// axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
 function App() {
   const dispatch = useDispatch(); // Get dispatch from useDispatch
   const initializeCart = () => {
@@ -59,6 +60,7 @@ function App() {
         <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/productdetails/:id" element={<ProductDetails />} />
+          <Route path="/product/createproduct" element={<ProductForm />} />
        
       </Routes>
       <Footer/>
