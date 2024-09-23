@@ -36,7 +36,9 @@ export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Button
-          onClick={() => handleAddToCart(product)}
+          onClick={(e) => {handleAddToCart(product)
+            e.stopPropagation()}
+          }
           className="w-full bg-green-500 hover:bg-green-600 text-white"
         >
           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
