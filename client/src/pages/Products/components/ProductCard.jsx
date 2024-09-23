@@ -12,11 +12,11 @@ import { useNavigate } from "react-router-dom";
 export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
     const navigate = useNavigate()
     const handleClick = () => {
-        console.log(product.id, "details")
-        navigate(`/productdetails/${product.id}`)
+        console.log(product._id, "details")
+        navigate(`/productdetails/${product._id}`)
     }
   return (
-    <Card onClick={handleClick} key={product.id} className="overflow-hidden">
+    <Card onClick={handleClick} key={product._id} className="overflow-hidden">
       <CardHeader className="p-0">
         <img
           src={product.image}
