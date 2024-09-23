@@ -31,7 +31,7 @@ const getOrderHistory = async (req, res) => {
     res.json(orders);
   } catch (error) {
     console.log(error);
-    res.json({ error: "something went wrong" });
+    res.json({ error: "something went  wrong" });
   }
 };
 module.exports = { createOrder, getOrderHistory };

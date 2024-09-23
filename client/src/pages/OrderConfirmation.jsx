@@ -18,6 +18,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { clearCart, setCart } from "@/store/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
+import { getCookie } from "@/utils/getCookie";
 export const OrderConfirmation = () => {
   const [loading, setLoading] = useState(false);
   const orderItems = useSelector((state) => state.cart.cart);
@@ -50,8 +51,13 @@ export const OrderConfirmation = () => {
       paymentStatus: "pending",
     };
     try {
+      const token = getCookie("token");
+      console.log(token);
       const response = await axios.post("/api/orders", orderData, {
         withCredentials: true,
+        // headers: {
+        //   authorization: `Bearer ${token}`
+        // }
       });
       if (response.data.error) {
         setLoading(false);
@@ -66,7 +72,7 @@ export const OrderConfirmation = () => {
     } catch (error) {
       setLoading(false);
       console.log(error);
-      toast.error("Something went wrong", "error");
+      toast.error("Something went  wrong", "error");
     }
   };
 

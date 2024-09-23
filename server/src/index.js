@@ -2,12 +2,12 @@ const cors = require("cors");
 const dotenv = require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const coookieParser = require("cookie-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const app = express();
 const authenticateJWT = require("./midldlewares/authenticateJWT");
+app.use(cookieParser());
 app.use(
   session({
     secret: "your-secret-key", // Change this to a strong secret key
@@ -26,7 +26,7 @@ const corsOptions = {
     "https://nxt-gen-grocery-fe.vercel.app",
   ],
   methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "authorization"],
 };
 
 app.use(cors(corsOptions));
@@ -34,7 +34,6 @@ app.use(cors(corsOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
-app.use(cookieParser());
 // app.get("/", (req, res) => {
 //   res.send("Hello World!");
 // });
