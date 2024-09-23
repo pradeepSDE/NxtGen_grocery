@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -9,53 +8,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Plus, Minus, ShoppingBag, Truck, CreditCard } from "lucide-react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
 
 export const Cart = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   console.log(isAuthenticated, user, "this is from cart");
   console.log(user?.name, user?.email);
-  const [address, setAddress] = useState("123 Green St, Freshville, FC 12345");
+  const [address, setAddress] = useState(user?.address);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Organic Apples",
-      price: 3.99,
-      quantity: 2,
-      image: "/placeholder.svg?height=100&width=100",
-    },
-    {
-      id: 2,
-      name: "Fresh Spinach",
-      price: 2.49,
-      quantity: 1,
-      image: "/placeholder.svg?height=100&width=100",
-    },
-    {
-      id: 3,
-      name: "Whole Grain Bread",
-      price: 4.99,
-      quantity: 1,
-      image: "/placeholder.svg?height=100&width=100",
-    },
-  ]);
 
   const cart = useSelector((state) => state.cart);
   const cartProducts = cart.cart;
   console.log(cartProducts);
-  const updateQuantity = (id, change) => {
- 
-  };
-  const total = useSelector((state)=>state.cart.total)
+  const updateQuantity = (id, change) => {};
+  const total = useSelector((state) => state.cart.total);
   const navigate = useNavigate();
-  const createOrder = ()=>{
-    navigate("/placeorder")
-  }
+  const createOrder = () => {
+    if (total === 0) {
+      toast.warning("Empty Cart");
+      return;
+    }
+    navigate("/placeorder");
+  };
 
+  const updateAddress = async () => {
+    const response = await axios.put(`/api/users/${user?.id}`, {
+      address: address, // Wrap the address in an object
+    });
+    console.log("update address", response.data);
+  };
+  const handleAddressUpdate = () => {
+    updateAddress();
+    setIsEditingAddress(false);
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -78,7 +67,7 @@ export const Cart = () => {
                   className="flex-grow mr-2 border-green-300 focus:border-green-500 focus:ring-green-500"
                 />
                 <Button
-                  onClick={() => setIsEditingAddress(false)}
+                  onClick={() => handleAddressUpdate()}
                   className="bg-green-500 hover:bg-green-600 text-white"
                 >
                   Save
@@ -120,7 +109,9 @@ export const Cart = () => {
                   <h3 className="font-semibold text-green-800">
                     {product.name}
                   </h3>
-                  <p className="text-green-600">${product?.price?.toFixed(2)}</p>
+                  <p className="text-green-600">
+                    ${product?.price?.toFixed(2)}
+                  </p>
                 </div>
                 <div className="flex items-center">
                   <Button
@@ -132,7 +123,7 @@ export const Cart = () => {
                     <Minus className="h-4 w-4" />
                   </Button>
                   <span className="mx-2 font-semibold text-green-800">
-                    {product.quantity} 
+                    {product.quantity}
                   </span>
                   <Button
                     onClick={() => updateQuantity(product.id, 1)}
@@ -154,7 +145,10 @@ export const Cart = () => {
           </CardFooter>
         </Card>
 
-        <Button onClick = {createOrder } className="w-full bg-green-500 hover:bg-green-600 text-white text-lg py-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1">
+        <Button
+          onClick={createOrder}
+          className="w-full bg-green-500 hover:bg-green-600 text-white text-lg py-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+        >
           <CreditCard className="mr-2" /> Proceed to Payment
         </Button>
       </div>

@@ -139,7 +139,8 @@ const profile = (req, res) => {
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, user) => {
       if (err) throw err;
-      res.json(user);
+      const userFull = await User.findById(user.id);
+      res.json(userFull);
     });
   } else {
     res.json(null);

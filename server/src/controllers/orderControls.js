@@ -1,9 +1,10 @@
 const Order = require("../models/orders.js");
 const createOrder = async (req, res) => {
   const { cart, user } = req.body;
+  console.log(user)
   try {
     const newOrder = new Order({
-      userId: user.id,
+      userId: user._id,
       cartItems: cart,
       date: Date.now(),
       shippingAddress: user.shippingAddress || null,

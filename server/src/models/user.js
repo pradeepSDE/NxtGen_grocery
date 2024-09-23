@@ -38,22 +38,8 @@ const userSchema = new Schema(
       required: true,
     },
     address: {
-      street: {
-        type: String,
-        trim: true,
-      },
-      city: {
-        type: String,
-        trim: true,
-      },
-      state: {
-        type: String,
-        trim: true,
-      },
-      zipCode: {
-        type: String,
-        trim: true,
-      },
+      type: String,
+      trim: true
     },
     phoneNumber: {
       type: String,

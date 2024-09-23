@@ -25,7 +25,7 @@ const corsOptions = {
     "http://localhost:5174",
     "https://nxt-gen-grocery-fe.vercel.app",
   ],
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "authorization"],
 };
 
