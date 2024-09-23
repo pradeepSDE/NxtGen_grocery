@@ -17,6 +17,7 @@ import { setCart, setEntireCart } from "./store/slices/cartSlice";
 import { OrderConfirmation } from "./pages/OrderConfirmation";
 import { OrderHistory } from "./pages/orderHistory/OrderHistory";
 import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
+import Footer from "./components/Footer";
 axios.defaults.withCredentials = true;
 // axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
@@ -60,6 +61,7 @@ function App() {
           <Route path="/productdetails/:id" element={<ProductDetails />} />
        
       </Routes>
+      <Footer/>
     </>
   );
 }
