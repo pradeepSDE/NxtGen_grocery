@@ -2,6 +2,7 @@ import React from "react";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -33,12 +34,12 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a
+                <Link to={'/product/createproduct'}
                   href="#"
                   className="text-sm hover:text-green-200 transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
                 <a

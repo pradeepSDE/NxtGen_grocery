@@ -38,4 +38,16 @@ const getProducts = async (req, res) => {
     console.log(error);
   }
 };
-module.exports = { createProduct, getProducts };
+
+const fetchProducts = async(req,res)=>{
+  try {
+    const products = await Product.find({});
+    if (!products) {
+      res.json({ error: "no products found" });
+    }
+    res.json(products);
+  } catch (error) {
+    console.log(error);
+  }
+}
+module.exports = {fetchProducts, createProduct, getProducts };

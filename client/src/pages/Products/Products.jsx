@@ -14,9 +14,14 @@ import { ShoppingCart, Filter, X, XCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 import { ProductCard } from "./components/ProductCard";
+import axios from "axios";
+import { setLoading } from "@/store/slices/productSlice";
 
 export const Products = ({ searchQuery }) => {
   console.log(searchQuery);
+
+  
+
   const initialProducts = [
     {
       id: 1,
@@ -89,7 +94,7 @@ export const Products = ({ searchQuery }) => {
       category: "Atta & Flours",
       brand: "ITC",
       image:
-        "https://imgs.search.brave.com/fanPfyf4F4PJdgMPCHbskAhZ7AueDbBoX8iWsRdR_Dw/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/amlvbWFydC5jb20v/aW1hZ2VzL3Byb2R1/Y3Qvb3JpZ2luYWwv/NDkwMDAwMDQxL2Fh/c2hpcnZhYWQtc2h1/ZGgtY2hha2tpLWF0/dGEtMTAta2ctcHJv/ZHVjdC1pbWFnZXMt/bzQ5MDAwMDA0MS1w/NDkwMDAwMDQxLTAt/MjAyNDAxMjYwODUx/LmpwZz9pbT1SZXNp/emU9KDE1MCwxNTAp",
+      "https://imgs.search.brave.com/fanPfyf4F4PJdgMPCHbskAhZ7AueDbBoX8iWsRdR_Dw/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/amlvbWFydC5jb20v/aW1hZ2VzL3Byb2R1/Y3Qvb3JpZ2luYWwv/NDkwMDAwMDQxL2Fh/c2hpcnZhYWQtc2h1/ZGgtY2hha2tpLWF0/dGEtMTAta2ctcHJv/ZHVjdC1pbWFnZXMt/bzQ5MDAwMDA0MS1w/NDkwMDAwMDQxLTAt/MjAyNDAxMjYwODUx/LmpwZz9pbT1SZXNp/emU9KDE1MCwxNTAp",
     },
     {
       id: 10,
@@ -107,7 +112,7 @@ export const Products = ({ searchQuery }) => {
       category: "Dairy",
       brand: "fresh",
       image:
-        "https://imgs.search.brave.com/sRyePyudYg1ptCx-SqFLybjwaqvJ1_SfrEJOH3Vv0sc/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/ODFBN014cjk1ZEwu/anBn",
+      "https://imgs.search.brave.com/sRyePyudYg1ptCx-SqFLybjwaqvJ1_SfrEJOH3Vv0sc/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/ODFBN014cjk1ZEwu/anBn",
     },
     {
       id: 12,
@@ -116,7 +121,7 @@ export const Products = ({ searchQuery }) => {
       category: "edible oils",
       brand: "fortune",
       image:
-        "https://5.imimg.com/data5/WH/LC/MY-48490939/1-kg-refined-oil-1000x1000.jpg",
+      "https://5.imimg.com/data5/WH/LC/MY-48490939/1-kg-refined-oil-1000x1000.jpg",
     },
     {
       id: 13,
@@ -125,7 +130,25 @@ export const Products = ({ searchQuery }) => {
       category: "Atta & Flours",
       brand: "fortune",
       image:
-        "https://imgs.search.brave.com/EePz1QvfWhxx5ZVVHF6OZd0LXmkIAgVu0JhvEFVfXpA/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NTFmVG5iaTgrOUwu/anBn",
+      "https://imgs.search.brave.com/EePz1QvfWhxx5ZVVHF6OZd0LXmkIAgVu0JhvEFVfXpA/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NTFmVG5iaTgrOUwu/anBn",
+    },
+    {
+      id: "66f16d352f75e5338caf115f",
+      name: "pradeep",
+      description: "full stack dev",
+      price: 2,
+      category: "mern devs",
+      stock: 1,
+      image:
+        "https://avatars.githubusercontent.com/u/103747065?s=400&u=37c4caf64aa456aea97845a6634019452c53b444&v=4",
+      brand: "Bisen",
+      createdAt: {
+        $date: "2024-09-23T13:29:25.140Z",
+      },
+      updatedAt: {
+        $date: "2024-09-23T13:29:25.140Z",
+      },
+      __v: 0,
     },
   ];
   const [products, setProducts] = useState(initialProducts);
@@ -134,11 +157,21 @@ export const Products = ({ searchQuery }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
+  
   const categories = Array.from(new Set(products.map((p) => p.category)));
   const brands = Array.from(new Set(products.map((p) => p.brand)));
   const dispatch = useDispatch();
+  const fetchProducts = async () => {
+    setLoading(true);
+    const response = await axios.get('/product/fetchProducts')
+    console.log(response.data)
+    setProducts(response.data)
+  };
 
+  useEffect(()=>{
+    fetchProducts()
+  },[products])
+  
   useEffect(() => {
     const filtered = products.filter(
       (product) =>
