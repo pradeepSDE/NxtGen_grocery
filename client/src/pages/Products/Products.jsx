@@ -29,29 +29,10 @@ export const Products = ({ searchQuery }) => {
       brand: "Nature's Best",
       image: "/placeholder.svg?height=200&width=200",
     },
-
-    {
-      id: "66f16d352f75e5338caf115f",
-      name: "pradeep",
-      description: "full stack dev",
-      price: 2,
-      category: "mern devs",
-      stock: 1,
-      image:
-        "https://avatars.githubusercontent.com/u/103747065?s=400&u=37c4caf64aa456aea97845a6634019452c53b444&v=4",
-      brand: "Bisen",
-      createdAt: {
-        $date: "2024-09-23T13:29:25.140Z",
-      },
-      updatedAt: {
-        $date: "2024-09-23T13:29:25.140Z",
-      },
-      __v: 0,
-    },
   ];
   const [products, setProducts] = useState(initialProducts);
   const [filteredProducts, setFilteredProducts] = useState(initialProducts);
-  const [priceRange, setPriceRange] = useState([0, 10]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -98,7 +79,7 @@ export const Products = ({ searchQuery }) => {
   };
 
   const formatPrice = (price) => {
-    return typeof price === "number" ? `$${price.toFixed(2)}` : "N/A";
+    return typeof price === "number" ? `₹${price.toFixed(2)}` : "N/A";
   };
 
   const handleAddToCart = (product) => {
