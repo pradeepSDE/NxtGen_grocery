@@ -41,15 +41,15 @@ export const ProductDetails = () => {
       <div className="max-w-6xl mx-auto">
         <Card className="overflow-hidden">
           <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/2 h-[300px] md:h-auto">
+            <div className="md:w-1/2 p-12 h-[300px] md:h-auto">
               <img
                 src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="md:w-1/2 p-6 md:p-8">
-              <ScrollArea className="h-[calc(100vh-200px)] pr-4">
+            <div className="md:w-1/2  p-6 md:p-8">
+              <ScrollArea className="h-screen pr-4">
                 <CardHeader className="p-0 mb-4">
                   <div className="flex justify-between items-start">
                     <div>
