@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ShoppingCart, Leaf, Package } from "lucide-react";
+import { ShoppingCart, Leaf, Package, DollarSign, IndianRupee } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { handleAddToCart } from "@/utils/AddToCart";
@@ -71,9 +71,15 @@ export const ProductDetails = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <p className="text-xl font-bold text-green-700 mb-4">
-                    {/* ${product.price.toFixed(2)} */}
-                  </p>
+                  <div className="bg-green-50 rounded-lg p-4 mb-6">
+                    <h2 className="text-2xl font-bold text-green-800 mb-2">
+                      Price
+                    </h2>
+                    <div className="flex items-center text-3xl font-bold text-green-700">
+                      <IndianRupee className="w-8 h-8 mr-1" />
+                      {product.price ? product.price.toFixed(2) : "0.00"}
+                    </div>
+                  </div>
                   <Separator className="my-4" />
                   <p className="text-green-800 mb-6">{product.description}</p>
                   <div className="flex items-center text-green-600 mb-6">
