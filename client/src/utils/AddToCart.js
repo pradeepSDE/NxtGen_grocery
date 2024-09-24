@@ -1,4 +1,9 @@
-import { setCart } from "@/store/slices/cartSlice";
+import {
+  setCart,
+  setEntireCart,
+  updateCartQuantity,
+} from "@/store/slices/cartSlice";
+import { useSelector } from "react-redux";
 
 export const handleAddToCart = (product, dispatch, setCart) => {
   const productWithQuantity = { ...product, quantity: product.quantity || 1 };
@@ -15,29 +20,17 @@ export const handleAddToCart = (product, dispatch, setCart) => {
 };
 
 export const updateQuantity = (dispatch, product, operation) => {
-  let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+  dispatch(updateCartQuantity({ productId: product.id, operation }));
 
-  // Find the existing product in the cart
-
-  let item = currentCart.find((item) => item.id === product.id);
-
-  if (item) {
+  const currentCart = JSON.parse(localStorage.getItem("cart"));
+  console.log(currentCart);
+  const existingItem = currentCart.find((item) => item.id === product.id);
+  if (existingItem) {
     if (operation === "increase") {
-      item = {
-        ...item, // Copy existing item properties
-        quantity: item.quantity + 1, // Update quantity
-      };
-      // Increase quantity
-      // item.quantity += 1;
-    } else if (operation === "decrease" && item.quantity > 1) {
-      // Decrease quantity
-      item.quantity -= 1;
-    } else if (operation === "decrease" && item.quantity === 1) {
-      // If quantity is 1 and the user tries to decrease, remove the item from the cart
-      // currentCart = currentCart.filter((item) => item.id !== product.id);
+      existingItem.quantity += 1;
+    } else if (operation === "decrease" && existingItem.quantity > 1) {
+      existingItem.quantity -= 1;
     }
   }
-  console.log(currentCart);
-  dispatch(setCart(currentCart));
   localStorage.setItem("cart", JSON.stringify(currentCart));
 };
