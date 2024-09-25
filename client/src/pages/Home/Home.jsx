@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShoppingCart, ArrowRight, Plus } from "lucide-react";
+import { ShoppingCart, ArrowRight, Plus, ShoppingBasket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,

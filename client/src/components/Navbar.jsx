@@ -10,6 +10,7 @@ import {
   Settings,
   LogOut,
   LogIn,
+  ShoppingBasket,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -46,7 +47,7 @@ export default function Navbar({ setSearchQuery }) {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to={"/"}>
-            <div className="text-2xl font-bold text-white">NxtGen</div>
+            <div className="text-2xl font-bold flex items-center gap-2 text-white"><ShoppingBasket/>NxtGen</div>
           </Link>
 
           {/* Desktop Menu */}
