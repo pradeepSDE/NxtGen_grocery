@@ -43,7 +43,7 @@ export const OrderCard = ({ order }) => (
               {item.name} (x{item.quantity})
             </span>
             <span className="font-medium text-green-700">
-              ${(item.price * item.quantity).toFixed(2)}
+            ₹{(item.price * item.quantity).toFixed(2)}
             </span>
           </li>
         ))}

@@ -173,7 +173,7 @@ export const Cart = () => {
           <CardFooter className="flex justify-between items-center">
             <div className="text-lg font-semibold text-green-800">Total:</div>
             <div className="text-2xl font-bold text-green-600">
-              ${total?.toFixed(2)}
+            ₹{total?.toFixed(2)}
             </div>
           </CardFooter>
         </Card>
