@@ -17,6 +17,7 @@ import axios from "axios";
 import { handleAddToCart } from "@/utils/AddToCart";
 import { setCart } from "@/store/slices/cartSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 export const ProductDetails = () => {
   const productId = useParams();
@@ -35,6 +36,7 @@ export const ProductDetails = () => {
   const dispatch = useDispatch();
   const addToCart = () => {
     handleAddToCart(product, dispatch, setCart);
+    toast.info("Item added to cart")
   };
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
@@ -45,7 +47,7 @@ export const ProductDetails = () => {
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-auto h-auto max-w-full max-h-full object-contain"
               />
             </div>
             <div className="md:w-1/2  p-6 md:p-8">

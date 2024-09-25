@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-48 object-cover"
+          className="w-auto h-auto max-w-full max-h-full object-contain"
         />
       </CardHeader>
       <CardContent className="p-4">
@@ -38,6 +39,7 @@ export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
         <Button
           onClick={(e) => {
             handleAddToCart(product);
+            toast.info("Item added to cart");
             e.stopPropagation();
           }}
           className="w-full bg-green-500 hover:bg-green-600 text-white"
