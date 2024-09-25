@@ -98,7 +98,7 @@ export const Products = ({ searchQuery }) => {
         </h1>
 
         <div className="flex flex-col md:flex-row gap-8">
-          <ScrollArea className="h-screen w-auto rounded-md border">
+          <ScrollArea className=" md:h-screen w-auto rounded-md border">
             {/* Filter sidebar for desktop */}
 
             <Card className="hidden   md:block w-64 h-fit sticky top-4">
