@@ -36,6 +36,7 @@ function App() {
     initializeCart();
   }, []);
   useEffect(() => {
+    
     GetAuthState(dispatch); // Pass dispatch as an argument to GetAuthState
     const cart = JSON.parse(localStorage.getItem("cart"));
     const total = cart.reduce(

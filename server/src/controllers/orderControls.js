@@ -1,16 +1,22 @@
 const Order = require("../models/orders.js");
 const createOrder = async (req, res) => {
-  const { cart, user } = req.body;
-  console.log(user)
+  const { cart } = req.body;
+ const user =  req.user
+//  console.log(user)
+  console.log(user,"user", user.id);
+  if (!user || !user.id) {
+    return res.status(400).json({ error: "User ID is missing" });
+  }
   try {
     const newOrder = new Order({
-      userId: user._id,
+      userId: user.id,
       cartItems: cart,
       date: Date.now(),
       shippingAddress: user.shippingAddress || null,
       total: req.body.total,
     });
     const response = await newOrder.save();
+    console.log(response)
     if (!response) {
       res.json({ error: "order failed" });
     }
@@ -21,11 +27,13 @@ const createOrder = async (req, res) => {
 };
 
 const getOrderHistory = async (req, res) => {
-  console.log(req.user)
+  console.log(req.user);
   const id = req.user.id;
   // console.log(id);
   try {
-    const orders = await Order.find({ userId: id }).limit(10).sort({ date: -1 });
+    const orders = await Order.find({ userId: id })
+      .limit(10)
+      .sort({ date: -1 });
     if (!orders) {
       res.json({ error: "no orders found" });
     }

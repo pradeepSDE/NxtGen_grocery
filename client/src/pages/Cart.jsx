@@ -8,13 +8,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Plus, Minus, ShoppingBag, Truck, CreditCard } from "lucide-react";
+import {
+  Plus,
+  Minus,
+  ShoppingBag,
+  Truck,
+  CreditCard,
+  Trash,
+} from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { handleAddToCart, updateQuantity } from "@/utils/AddToCart";
-import { setCart } from "@/store/slices/cartSlice";
+import { clearCart, setCart } from "@/store/slices/cartSlice";
 
 export const Cart = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -37,11 +44,16 @@ export const Cart = () => {
     navigate("/placeorder");
   };
   const updateAddress = async () => {
-    const response = await axios.put(`/api/users/${user?.id}`, {
+    if (!user?._id) {
+      console.error("User ID is undefined or missing");
+      return; // Stop if the user ID is missing
+    }
+    const response = await axios.put(`/api/users/${user?._id}`, {
       address: address, // Wrap the address in an object
     });
     console.log("update address", response.data);
   };
+  // console.log("update address", user._id);
   useEffect(() => {
     updateAddress();
   }, []);
@@ -50,6 +62,10 @@ export const Cart = () => {
     setIsEditingAddress(false);
   };
   const dispatch = useDispatch();
+  const handleClearCart = () => {
+    dispatch(clearCart());
+    localStorage.removeItem("cart");
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -95,8 +111,16 @@ export const Cart = () => {
 
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center text-green-700">
-              <ShoppingBag className="mr-2" /> Your Items
+            <CardTitle className="flex items-center justify-between text-green-700">
+              <div className="flex">
+                <ShoppingBag className="mr-2" /> Your Items
+              </div>
+              <div
+                onClick={handleClearCart}
+                className="flex cursor-pointer justify-center text-red-400 border-2 border-red-400 rounded-full p-2 items-center text-sm"
+              >
+                <Trash className="h-4 w-4 text-red-400" /> Clear Cart
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>

@@ -45,7 +45,6 @@ export const OrderConfirmation = () => {
     setLoading(true);
     const cart = JSON.parse(localStorage.getItem("cart"));
     const orderData = {
-      user,
       cart,
       total: totalAmount,
       paymentStatus: "pending",

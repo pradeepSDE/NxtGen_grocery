@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const authenticateJWT = (req, res, next) => {
   const tokenString = req.cookies.token;
-
+  console.log(tokenString,"authJWT  ");
   if (tokenString) {
     try {
       const decoded = jwt.verify(tokenString, process.env.JWT_SECRET);
