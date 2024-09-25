@@ -3,11 +3,14 @@ import { OrderCard } from "./components/OrderCard";
 import { NoOrders } from "./components/NoOrders";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { SkeletonOrderHistory } from "./components/Skeleton";
 
 export const OrderHistory = () => {
   const token = localStorage.getItem("token");
   const [pastOrders, setPastOrders] = useState([]);
+  const [loading,setLoading] = useState(true);
   useEffect(() => {
+    setLoading(true);
     const fetchOrders = async () => {
       try {
         const response = await axios.get("/api/orders_history", {
@@ -20,8 +23,10 @@ export const OrderHistory = () => {
         console.log ( array);
         setPastOrders(array);
         console.log(typeof(pastOrders));
+        setLoading(false);
       } catch (error) {
         console.error(error);
+        setLoading(false);
       }
     };
     fetchOrders();
@@ -30,8 +35,13 @@ export const OrderHistory = () => {
   const user = useSelector((state) => state.auth.user);
 
   return (
+    
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+      {loading?(
+        <SkeletonOrderHistory/>
+      ):(
+        
+        <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold text-green-800 mb-8 text-center">
           Your Order History
         </h1>
@@ -46,6 +56,7 @@ export const OrderHistory = () => {
           <NoOrders />
         )}
       </div>
+        )}
     </div>
   );
 };

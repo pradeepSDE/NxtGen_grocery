@@ -15,6 +15,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 import { ProductCard } from "./components/ProductCard";
 import axios from "axios";
+import {
+  SkeletonCard,
+  SkeletonProductCard,
+} from "./components/productSkeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const Products = ({ searchQuery }) => {
   console.log(searchQuery);
@@ -25,7 +30,7 @@ export const Products = ({ searchQuery }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const categories = Array.from(new Set(products.map((p) => p.category)));
   const brands = Array.from(new Set(products.map((p) => p.brand)));
   const dispatch = useDispatch();
@@ -33,6 +38,7 @@ export const Products = ({ searchQuery }) => {
     setLoading(true);
     const response = await axios.get("/product/fetchProducts");
     setProducts(response.data);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -92,82 +98,92 @@ export const Products = ({ searchQuery }) => {
         </h1>
 
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Filter sidebar for desktop */}
-          <Card className="hidden   md:block w-64 h-fit sticky top-4">
-            <CardHeader>
-              <CardTitle className="flex items-center text-green-700">
-                <Filter className="mr-2" /> Filters
-              </CardTitle>
-              <Button
-                className="flex items-center gap-2 text-green-700 font-medium"
-                onClick={() => {
-                  setSelectedBrands([]);
-                  setSelectedCategories([]);
-                  setPriceRange([0, 10000]);
-                }}
-                variant="outline"
-              >
-                <XCircle />
-                Clear all filters
-              </Button>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label className="text-green-700 mb-2 block">Price Range</Label>
-                <Slider
-                  min={0}
-                  max={10}
-                  step={0.5}
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  className="w-full"
-                />
-                <div className="flex justify-between mt-2 text-sm text-green-600">
-                  <span>{formatPrice(priceRange[0])}</span>
-                  <span>{formatPrice(priceRange[1])}</span>
+          <ScrollArea className="h-screen w-auto rounded-md border">
+            {/* Filter sidebar for desktop */}
+
+            <Card className="hidden   md:block w-64 h-fit sticky top-4">
+              <CardHeader>
+                <CardTitle className="flex items-center text-green-700">
+                  <Filter className="mr-2" /> Filters
+                </CardTitle>
+                <Button
+                  className="flex items-center gap-2 text-green-700 font-medium"
+                  onClick={() => {
+                    setSelectedBrands([]);
+                    setSelectedCategories([]);
+                    setPriceRange([0, 10000]);
+                  }}
+                  variant="outline"
+                >
+                  <XCircle />
+                  Clear all filters
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <Label className="text-green-700 mb-2 block">
+                    Price Range
+                  </Label>
+                  <Slider
+                    min={0}
+                    max={10000}
+                    step={100}
+                    value={priceRange}
+                    onValueChange={setPriceRange}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between mt-2 text-sm text-green-600">
+                    <span>{formatPrice(priceRange[0])}</span>
+                    <span>{formatPrice(priceRange[1])}</span>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <Label className="text-green-700 mb-2 block">Categories</Label>
-                {categories.map((category) => (
-                  <div
-                    key={category}
-                    className="flex items-center space-x-2 mb-2"
-                  >
-                    <Checkbox
-                      id={`category-${category}`}
-                      checked={selectedCategories.includes(category)}
-                      onCheckedChange={() => toggleCategory(category)}
-                    />
-                    <label
-                      htmlFor={`category-${category}`}
-                      className="text-sm text-green-600 cursor-pointer"
+                <div>
+                  <Label className="text-green-700 mb-2 block">
+                    Categories
+                  </Label>
+                  {categories.map((category) => (
+                    <div
+                      key={category}
+                      className="flex items-center space-x-2 mb-2"
                     >
-                      {category}
-                    </label>
-                  </div>
-                ))}
-              </div>
-              <div>
-                <Label className="text-green-700 mb-2 block">Brands</Label>
-                {brands.map((brand) => (
-                  <div key={brand} className="flex items-center space-x-2 mb-2">
-                    <Checkbox
-                      id={`brand-${brand}`}
-                      checked={selectedBrands.includes(brand)}
-                      onCheckedChange={() => toggleBrand(brand)}
-                    />
-                    <label
-                      htmlFor={`brand-${brand}`}
-                      className="text-sm text-green-600 cursor-pointer"
+                      <Checkbox
+                        id={`category-${category}`}
+                        checked={selectedCategories.includes(category)}
+                        onCheckedChange={() => toggleCategory(category)}
+                      />
+                      <label
+                        htmlFor={`category-${category}`}
+                        className="text-sm text-green-600 cursor-pointer"
+                      >
+                        {category}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <Label className="text-green-700 mb-2 block">Brands</Label>
+                  {brands.map((brand) => (
+                    <div
+                      key={brand}
+                      className="flex items-center space-x-2 mb-2"
                     >
-                      {brand}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                      <Checkbox
+                        id={`brand-${brand}`}
+                        checked={selectedBrands.includes(brand)}
+                        onCheckedChange={() => toggleBrand(brand)}
+                      />
+                      <label
+                        htmlFor={`brand-${brand}`}
+                        className="text-sm text-green-600 cursor-pointer"
+                      >
+                        {brand}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </ScrollArea>
 
           {/* Filter button for mobile */}
           <Button
@@ -259,30 +275,36 @@ export const Products = ({ searchQuery }) => {
           )}
 
           {/* Product grid */}
-          <div className="flex-1">
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    handleAddToCart={handleAddToCart}
-                    formatPrice={formatPrice}
-                  />
-                ))}
-              </div>
-            ) : (
-              <Card className="p-8 text-center">
-                <CardTitle className="text-2xl font-semibold text-green-800 mb-4">
-                  No Products Found
-                </CardTitle>
-                <p className="text-green-600">
-                  Sorry, no products match your current filters. Try adjusting
-                  your search criteria.
-                </p>
-              </Card>
-            )}
-          </div>
+          {loading ? (
+            <div className="flex-1">
+              <SkeletonProductCard />
+            </div>
+          ) : (
+            <div className="flex-1">
+              {filteredProducts.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      handleAddToCart={handleAddToCart}
+                      formatPrice={formatPrice}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Card className="p-8 text-center">
+                  <CardTitle className="text-2xl font-semibold text-green-800 mb-4">
+                    No Products Found
+                  </CardTitle>
+                  <p className="text-green-600">
+                    Sorry, no products match your current filters. Try adjusting
+                    your search criteria.
+                  </p>
+                </Card>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
