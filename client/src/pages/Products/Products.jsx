@@ -15,35 +15,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 import { ProductCard } from "./components/ProductCard";
 import axios from "axios";
-import { setLoading } from "@/store/slices/productSlice";
 
 export const Products = ({ searchQuery }) => {
   console.log(searchQuery);
 
-  const initialProducts = [
-    {
-      id: 1,
-      name: "Organic Apples",
-      price: 3.99,
-      category: "Fruits",
-      brand: "Nature's Best",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-  ];
-  const [products, setProducts] = useState(initialProducts);
-  const [filteredProducts, setFilteredProducts] = useState(initialProducts);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState(products);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const categories = Array.from(new Set(products.map((p) => p.category)));
   const brands = Array.from(new Set(products.map((p) => p.brand)));
   const dispatch = useDispatch();
   const fetchProducts = async () => {
     setLoading(true);
     const response = await axios.get("/product/fetchProducts");
-    console.log(response.data);
     setProducts(response.data);
   };
 
@@ -115,7 +103,7 @@ export const Products = ({ searchQuery }) => {
                 onClick={() => {
                   setSelectedBrands([]);
                   setSelectedCategories([]);
-                  setPriceRange([0, 10]);
+                  setPriceRange([0, 10000]);
                 }}
                 variant="outline"
               >

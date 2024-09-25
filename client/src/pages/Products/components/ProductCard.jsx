@@ -10,11 +10,11 @@ import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
-    const navigate = useNavigate()
-    const handleClick = () => {
-        console.log(product._id, "details")
-        navigate(`/productdetails/${product._id}`)
-    }
+  const navigate = useNavigate();
+  const handleClick = () => {
+    console.log(product._id, "details");
+    navigate(`/productdetails/${product._id}`);
+  };
   return (
     <Card onClick={handleClick} key={product._id} className="overflow-hidden">
       <CardHeader className="p-0">
@@ -36,9 +36,10 @@ export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Button
-          onClick={(e) => {handleAddToCart(product)
-            e.stopPropagation()}
-          }
+          onClick={(e) => {
+            handleAddToCart(product);
+            e.stopPropagation();
+          }}
           className="w-full bg-green-500 hover:bg-green-600 text-white"
         >
           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
