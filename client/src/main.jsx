@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/sonner"
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-    <Toaster richColors={true}  position="top-center" expand={false} />
+    <Toaster richColors={true}  position="bottom-center" expand={false} />
     < Provider store={store}>
     <App />
     </Provider>

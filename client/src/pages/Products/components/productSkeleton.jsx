@@ -8,7 +8,7 @@ import {
 
 export function SkeletonCard() {
   return (
-    <div className=" bg-gradient-to-b from-green-100 to-white px-4 sm:px-6 lg:px-8">
+    <div className=" bg-gradient-to-b from-green-100 to-white px-4 sm:px-6 lg:px-8 ">
       <div className="max-w-6xl mx-auto">
         <Card className="overflow-hidden">
           <div className="flex flex-col md:flex-row">
@@ -75,7 +75,18 @@ export function SkeletonCard() {
 
 export function SkeletonProductCard() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
+      <Card className="overflow-hidden p-2     text-center shadow">
+        <CardHeader className="p-0">
+          <Skeleton className="w-full h-48" />
+        </CardHeader>
+        <CardContent className="p-4">
+          <Skeleton className="h-6 w-3/4 mb-2" /> {/* Product name */}
+          <Skeleton className="h-4 w-1/2 mb-2" /> {/* Category */}
+          <Skeleton className="h-4 w-1/2 mb-2" /> {/* Brand */}
+          <Skeleton className="h-6 w-1/3" /> {/* Price */}
+        </CardContent>
+      </Card>
       <Card className="overflow-hidden p-2     text-center shadow">
         <CardHeader className="p-0">
           <Skeleton className="w-full h-48" />
