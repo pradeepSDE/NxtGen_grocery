@@ -207,6 +207,19 @@ export const Products = ({ searchQuery }) => {
                 <h2 className="text-xl font-semibold text-green-700 mb-4">
                   Filters
                 </h2>
+                <Button
+                  className="flex mx-auto my-3 rounded-full items-center gap-2 text-green-700 font-medium"
+                  onClick={() => {
+                    setSelectedBrands([]);
+                    setSelectedCategories([]);
+                    setPriceRange([0, 10000]);
+                    setIsFilterOpen(false)
+                  }}
+                  variant="outline"
+                >
+                  <XCircle />
+                  Clear all filters
+                </Button>
                 <div className="space-y-6">
                   <div>
                     <Label className="text-green-700 mb-2 block">
@@ -282,7 +295,7 @@ export const Products = ({ searchQuery }) => {
           ) : (
             <div className="flex-1">
               {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                   {filteredProducts.map((product) => (
                     <ProductCard
                       key={product.id}
