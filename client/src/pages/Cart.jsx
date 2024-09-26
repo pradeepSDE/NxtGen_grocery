@@ -20,19 +20,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
-import { handleAddToCart, updateQuantity } from "@/utils/AddToCart";
-import { clearCart, setCart } from "@/store/slices/cartSlice";
+import { updateQuantity } from "@/utils/AddToCart";
+import { clearCart } from "@/store/slices/cartSlice";
+import { setUser } from "@/store/slices/authSlice";
 
 export const Cart = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   console.log(isAuthenticated, user, "this is from cart");
-  console.log(user?.name, user?.email);
-  const [address, setAddress] = useState(user?.address);
+  console.log(user?.name, user?.email, user?.address);
+  const [address, setAddress] = useState(user?.address || "");
   const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   const cart = useSelector((state) => state.cart);
   const cartProducts = cart.cart;
-  console.log(cartProducts);
 
   const total = useSelector((state) => state.cart.total);
   const navigate = useNavigate();
@@ -54,12 +54,11 @@ export const Cart = () => {
     console.log("update address", response.data);
   };
   // console.log("update address", user._id);
-  useEffect(() => {
-    updateAddress();
-  }, []);
+
   const handleAddressUpdate = () => {
     updateAddress();
     setIsEditingAddress(false);
+    dispatch(setUser({ ...user, address: address }));
   };
   const dispatch = useDispatch();
   const handleClearCart = () => {
@@ -96,7 +95,7 @@ export const Cart = () => {
               </div>
             ) : (
               <div className="flex items-center justify-between">
-                <p className="text-green-600">{address}</p>
+                <p className="text-green-600">{user?.address}</p>
                 <Button
                   onClick={() => setIsEditingAddress(true)}
                   variant="outline"
@@ -173,7 +172,7 @@ export const Cart = () => {
           <CardFooter className="flex justify-between items-center">
             <div className="text-lg font-semibold text-green-800">Total:</div>
             <div className="text-2xl font-bold text-green-600">
-            ₹{total?.toFixed(2)}
+              ₹{total?.toFixed(2)}
             </div>
           </CardFooter>
         </Card>
