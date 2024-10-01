@@ -12,89 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FeaturedProducts } from "./components/FeaturedProducts";
 
 export default function HomePage() {
-  const [visibleProducts, setVisibleProducts] = useState(8);
   const navigate = useNavigate();
-  // Sample product data
-  const allProducts = [
-    {
-      id: 1,
-      name: "Fresh Apples",
-      price: 2.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 2,
-      name: "Organic Bananas",
-      price: 1.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 3,
-      name: "Whole Grain Bread",
-      price: 3.49,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 4,
-      name: "Farm Fresh Eggs",
-      price: 4.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 5,
-      name: "Organic Milk",
-      price: 3.79,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 6,
-      name: "Fresh Spinach",
-      price: 2.49,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 7,
-      name: "Ripe Tomatoes",
-      price: 1.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 8,
-      name: "Cheddar Cheese",
-      price: 5.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 9,
-      name: "Chicken Breast",
-      price: 6.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 10,
-      name: "Atlantic Salmon",
-      price: 9.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 11,
-      name: "Avocados",
-      price: 2.49,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-    {
-      id: 12,
-      name: "Greek Yogurt",
-      price: 3.99,
-      image: "/placeholder.svg?height=150&width=150",
-    },
-  ];
-
-  const loadMore = () => {
-    setVisibleProducts((prevCount) =>
-      Math.min(prevCount + 4, allProducts.length)
-    );
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -128,11 +46,7 @@ export default function HomePage() {
         </Link>
       </section>
 
-      <FeaturedProducts
-        setVisibleProducts={setVisibleProducts}
-        allProducts={allProducts}
-        visibleProducts={visibleProducts}
-      />
+      <FeaturedProducts />
     </div>
   );
 }

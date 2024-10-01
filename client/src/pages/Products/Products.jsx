@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { ShoppingCart, Filter, X, XCircle } from "lucide-react";
+import { ShoppingCart, Filter, X, XCircle, Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 import { ProductCard } from "./components/ProductCard";
@@ -23,7 +23,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const Products = ({ searchQuery }) => {
   console.log(searchQuery);
-
+  const [visibleProducts, setVisibleProducts] = useState(8);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [priceRange, setPriceRange] = useState([0, 10000]);
@@ -34,6 +34,9 @@ export const Products = ({ searchQuery }) => {
   const categories = Array.from(new Set(products.map((p) => p.category)));
   const brands = Array.from(new Set(products.map((p) => p.brand)));
   const dispatch = useDispatch();
+  const loadMore = () => {
+    setVisibleProducts((prevCount) => Math.min(prevCount + 4, products.length));
+  };
   const fetchProducts = async () => {
     setLoading(true);
     const response = await axios.get("/product/fetchProducts");
@@ -212,7 +215,7 @@ export const Products = ({ searchQuery }) => {
                     setSelectedBrands([]);
                     setSelectedCategories([]);
                     setPriceRange([0, 10000]);
-                    setIsFilterOpen(false)
+                    setIsFilterOpen(false);
                   }}
                   variant="outline"
                 >
@@ -295,12 +298,11 @@ export const Products = ({ searchQuery }) => {
             <div className="flex-1">
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
-                  {filteredProducts.map((product) => (
+                  {filteredProducts.slice(0,visibleProducts).map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}
                       handleAddToCart={handleAddToCart}
-                      formatPrice={formatPrice}
                     />
                   ))}
                 </div>
@@ -315,6 +317,16 @@ export const Products = ({ searchQuery }) => {
                   </p>
                 </Card>
               )}
+          {visibleProducts < products.length && (
+            <div className="mt-8 text-center">
+              <Button
+                onClick={loadMore}
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full text-lg inline-flex items-center"
+              >
+                <Plus className="mr-2 h-5 w-5" /> Load More
+              </Button>
+            </div>
+          )}
             </div>
           )}
         </div>

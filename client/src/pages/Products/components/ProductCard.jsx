@@ -10,11 +10,14 @@ import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
+export const ProductCard = ({ product, handleAddToCart }) => {
   const navigate = useNavigate();
   const handleClick = () => {
     console.log(product._id, "details");
     navigate(`/productdetails/${product._id}`);
+  };
+  const formatPrice = (price) => {
+    return typeof price === "number" ? `₹${price.toFixed(2)}` : "N/A";
   };
   return (
     <Card onClick={handleClick} key={product._id} className="overflow-hidden flex flex-col h-full ">
