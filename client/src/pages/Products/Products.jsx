@@ -81,7 +81,6 @@ export const Products = ({ searchQuery }) => {
     dispatch(setCart(productWithQuantity));
     const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
     const existingItem = currentCart.find((item) => item.id === product.id);
-    // console.log(exist)
     if (existingItem) {
       existingItem.quantity += 1;
     } else {

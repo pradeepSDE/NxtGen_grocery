@@ -2,20 +2,32 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { setCart } from "@/store/slices/cartSlice"
 import { handleAddToCart } from "@/utils/AddToCart"
+import axios from "axios"
 import { Plus, ShoppingCart } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 
 export const FeaturedProducts = ({setVisibleProducts, allProducts, visibleProducts}) => {
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
     const loadMore = () => {
-        setVisibleProducts(prevCount => Math.min(prevCount + 4, allProducts.length))
+        setVisibleProducts(prevCount => Math.min(prevCount + 4, products.length))
       }
       const dispatch = useDispatch();
-
+      const fetchProducts = async () => {
+        setLoading(true);
+        const response = await axios.get("/product/fetchProducts");
+        setProducts(response.data);
+        setLoading(false);
+      };
+      useEffect(() => {
+        fetchProducts();
+      }, []);
     return(
         <section>
         <h2 className="text-3xl font-bold text-gray-800 mb-6">Featured Products</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {allProducts.slice(0, visibleProducts).map((product) => (
+          {products.slice(0, visibleProducts).map((product) => (
             <Card key={product.id} className="overflow-hidden">
               <CardHeader className="p-2">
                 <img src={product.image} alt={product.name} className="w-full h-36 object-cover rounded-md" />
@@ -32,7 +44,7 @@ export const FeaturedProducts = ({setVisibleProducts, allProducts, visibleProduc
             </Card>
           ))}
         </div>
-        {visibleProducts < allProducts.length && (
+        {visibleProducts < products.length && (
           <div className="mt-8 text-center">
             <Button 
               onClick={loadMore} 
