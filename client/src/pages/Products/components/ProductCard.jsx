@@ -17,7 +17,7 @@ export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
     navigate(`/productdetails/${product._id}`);
   };
   return (
-    <Card onClick={handleClick} key={product._id} className="overflow-hidden">
+    <Card onClick={handleClick} key={product._id} className="overflow-hidden flex flex-col h-full ">
       <CardHeader className="p-0">
         <img
           src={product.image}
@@ -25,7 +25,7 @@ export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
           className="w-auto h-auto max-w-full max-h-full object-contain"
         />
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex-grow">
         <CardTitle className="text-lg font-semibold mb-2 text-green-800">
           {product.name}
         </CardTitle>
@@ -35,7 +35,7 @@ export const ProductCard = ({ product, handleAddToCart, formatPrice }) => {
           {formatPrice(product.price)}
         </p>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-4  mt-auto ">
         <Button
           onClick={(e) => {
             handleAddToCart(product);
