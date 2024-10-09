@@ -211,6 +211,9 @@ export const OrderConfirmation = () => {
                       className="mt-4 w-full  bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
                       disabled={!stripe || loading}
                     >
+                      {loading && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
                       Pay now
                     </Button>
                     {error && <div>{error}</div>}
@@ -225,8 +228,7 @@ export const OrderConfirmation = () => {
                     {loading && (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    {paymentMethod === "cod" && "pay on delivery"}
-
+                    pay on delivery
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 )}
