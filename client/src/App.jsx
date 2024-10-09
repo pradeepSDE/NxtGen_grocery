@@ -23,8 +23,8 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000";
-// axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
+// axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
 function App() {
   const stripePromise = loadStripe("pk_test_51Q7AUjRsMebkM6kidYO8LVKH1BnMsSD5LhVLkLjbKAMT4AHUIMpVxlrrMIPpOKzl3nocX6qU4VaRTN2EeEKFtTVh00RYB6uapI");
   const dispatch = useDispatch(); // Get dispatch from useDispatch
