@@ -1,6 +1,6 @@
 const dotenv = require("dotenv");
 const { v4: uuidv4 } = require("uuid");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); 
 const createPayment = async (req, res) => {
   const { cart, paymentMethodId, email } = req.body;
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
