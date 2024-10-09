@@ -1,5 +1,13 @@
 import React from "react";
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import {
+  Facebook,
+  GitBranchIcon,
+  Github,
+  GithubIcon,
+  Instagram,
+  LucideGithub,
+  Twitter,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -15,7 +23,7 @@ export default function Footer() {
               About NxtGen Groceries
             </h3>
             <p className="text-sm">
-              We`&apos`re committed to providing fresh, organic produce and
+              We are committed to providing fresh, organic produce and
               high-quality groceries to our community, supporting local farmers
               and sustainable practices.
             </p>
@@ -34,7 +42,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <Link to={'/product/createproduct'}
+                <Link
+                  to={"/product/createproduct"}
                   href="#"
                   className="text-sm hover:text-green-200 transition-colors"
                 >
@@ -103,8 +112,11 @@ export default function Footer() {
           <p className="text-sm">
             © {new Date().getFullYear()} NxtGen Groceries. All rights reserved.
           </p>
-          <p className="text-sm text-green-300">
-           Developed by <span className="font-bold "> Pradeep Bisen</span> 
+          <p className="text-sm flex gap-2  text-green-300">
+            Developed by <span className="font-bold "> Pradeep Bisen </span>
+            <a href="https://github.com/pradeepSDE">
+              <LucideGithub size={24} className="text-white" />
+            </a>
           </p>
         </div>
       </div>

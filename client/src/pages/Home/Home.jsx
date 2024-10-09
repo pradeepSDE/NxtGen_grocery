@@ -20,11 +20,12 @@ export default function HomePage() {
       <section className="bg-gradient-to-r from-green-400 to-teal-500 rounded-lg shadow-lg p-8 mb-12">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-white mb-4">
-            Welcome to FreshMart
+            Welcome to NxtGen grocery
           </h1>
           <p className="text-xl text-white mb-6">
             Your one-stop shop for fresh groceries
           </p>
+          <p className="text-sm text-white mb-4"> A unit of Shree Shyam General Stores</p>
           <Button
             onClick={() => navigate("/orderhistory")}
             className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold py-2 px-4 rounded-full inline-flex items-center"
