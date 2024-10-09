@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,42 +14,53 @@ import { CreditCard, Banknote, ArrowRight, Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "sonner";
-import { clearCart, setCart } from "@/store/slices/cartSlice";
+import { clearCart } from "@/store/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
-import { getCookie } from "@/utils/getCookie";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 export const OrderConfirmation = () => {
+  const totalAmount = useSelector((state) => state.cart.total);
   const [loading, setLoading] = useState(false);
   const orderItems = useSelector((state) => state.cart.cart);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("stripe");
+  const [paymentStatus, setPaymentStatus] = useState(null);
   const total = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
-  const handleSubmit = (e) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState(null);
+  const user = auth.user;
+  //handling the payment method form
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!auth.isAuthenticated) {
       toast.info("Please login to place order", "info");
       return;
     }
-    placeOrder();
+    if (paymentMethod === "stripe") {
+      await handleSubmitPayment();
+    } else if (paymentMethod === "cod") {
+      setPaymentStatus("unpaid");
+      placeOrder("pending");
+    }
   };
-  const totalAmount = useSelector((state) => state.cart.total);
-  const user = useSelector((state) => state.auth.user);
-  const placeOrder = async () => {
+
+  //placing order
+  const placeOrder = async (paymentStatus) => {
     setLoading(true);
     const cart = JSON.parse(localStorage.getItem("cart"));
     const orderData = {
       cart,
       total: totalAmount,
-      paymentStatus: "pending",
+      paymentStatus: paymentStatus,
     };
     try {
-      const token = getCookie("token");
-      console.log(token);
+      // const token = getCookie("token");
+      // console.log(token);
       const response = await axios.post("/api/orders", orderData, {
         withCredentials: true,
       });
@@ -70,6 +79,81 @@ export const OrderConfirmation = () => {
       console.log(error);
       toast.error("Something went  wrong", "error");
     }
+  };
+
+  //making payment using stripe API
+  const handleSubmitPayment = async () => {
+    if (!auth.isAuthenticated) {
+      toast.error("Please login to place order");
+      return;
+    }
+    setLoading(true);
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    try {
+      // Create Payment Method using Stripe's API
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      });
+
+      if (error) {
+        setError(error.message);
+        setLoading(false);
+        return;
+      }
+
+      const response = await axios.post(
+        "/payment",
+        {
+          paymentMethodId: paymentMethod.id,
+          cart: orderItems,
+          email: user?.email, // Pass the user's email
+        },
+        { withCredentials: true }
+      );
+
+      if (response.data.status === "succeeded") {
+        setPaymentStatus("paid");
+        toast.success("Payment succeeded!");
+        console.log("calling place order");
+        console.log(paymentStatus);
+        placeOrder("paid");
+      } else {
+        toast.error("Payment failed!");
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+
+    setLoading(false);
+  };
+  // Card Element options
+  const CARD_ELEMENT_OPTIONS = {
+    style: {
+      base: {
+        color: "#32325d", // Base color for card input
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: "antialiased",
+        fontSize: "16px", // Font size for card input
+        "::placeholder": {
+          color: "#aab7c4", // Placeholder color
+        },
+      },
+      invalid: {
+        color: "#fa755a", // Invalid card color
+        iconColor: "#fa755a", // Invalid icon color
+      },
+      complete: {
+        color: "#4caf50", // Color after valid card details are entered
+      },
+    },
+    hidePostalCode: true, // Hides the postal code input field
   };
 
   return (
@@ -120,47 +204,32 @@ export const OrderConfirmation = () => {
                 </RadioGroup>
 
                 {paymentMethod === "stripe" && (
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="card-number">Card Number</Label>
-                      <Input
-                        id="card-number"
-                        placeholder="1234 5678 9012 3456"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="expiry-date">Expiry Date</Label>
-                        <Input id="expiry-date" placeholder="MM/YY" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cvv">CVV</Label>
-                        <Input id="cvv" placeholder="123" />
-                      </div>
-                    </div>
-                  </div>
+                  <form className="flex flex-col ">
+                    <CardElement options={CARD_ELEMENT_OPTIONS} />
+                    <Button
+                      onClick={handleSubmitPayment}
+                      className="mt-4 w-full  bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                      disabled={!stripe || loading}
+                    >
+                      Pay now
+                    </Button>
+                    {error && <div>{error}</div>}
+                  </form>
                 )}
+                {paymentMethod === "cod" && (
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                  >
+                    {loading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    {paymentMethod === "cod" && "pay on delivery"}
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
-                >
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {paymentMethod === "stripe"
-                    ? "Pay Now"
-                    : "Place Order (Cash on Delivery)"}
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-
-                {/* <Button
-                  type="submit"
-                  className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
-                >
-                  {paymentMethod === "stripe"
-                    ? "Pay Now"
-                    : "Place Order (Cash on Delivery)"}
-                </Button> */}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                )}
               </form>
             </CardContent>
           </Card>

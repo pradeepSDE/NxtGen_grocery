@@ -1,9 +1,10 @@
 const Order = require("../models/orders.js");
 const createOrder = async (req, res) => {
-  const { cart } = req.body;
- const user =  req.user
-//  console.log(user)
-  console.log(user,"user", user.id);
+  const { cart, paymentStatus } = req.body;
+  const user = req.user;
+
+  console.log(paymentStatus, "paymentStatus");
+  console.log(user, "user", user.id);
   if (!user || !user.id) {
     return res.status(400).json({ error: "User ID is missing" });
   }
@@ -14,9 +15,10 @@ const createOrder = async (req, res) => {
       date: Date.now(),
       shippingAddress: user.shippingAddress || null,
       total: req.body.total,
+      paymentStatus: paymentStatus,
     });
     const response = await newOrder.save();
-    console.log(response)
+    console.log(response);
     if (!response) {
       res.json({ error: "order failed" });
     }

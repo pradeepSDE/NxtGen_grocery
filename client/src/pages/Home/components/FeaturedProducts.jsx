@@ -66,7 +66,7 @@ export const FeaturedProducts = () => {
               <p className="text-sm text-green-600 mb-2">{product.category}</p>
               <p className="text-sm text-green-600 mb-2">{product.brand}</p>
               <p className="text-lg font-bold text-green-700">
-                {/* {formatPrice(product.price)} */}
+                {formatPrice(product.price)}
               </p>
             </CardContent>
             <CardFooter className="p-4  mt-auto ">

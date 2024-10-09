@@ -15,15 +15,18 @@ import { useEffect, useState } from "react";
 import { GetAuthState } from "./store/AuthState";
 import { PrivateRoutes, ProtectedRoute } from "./components/protectedRoutes";
 import { setCart, setEntireCart } from "./store/slices/cartSlice";
-import { OrderConfirmation } from "./pages/OrderConfirmation";
+import { OrderConfirmation } from "./pages/OrderConfirm/OrderConfirmation";
 import { OrderHistory } from "./pages/orderHistory/OrderHistory";
 import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
 import Footer from "./components/Footer";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 axios.defaults.withCredentials = true;
-// axios.defaults.baseURL = "http://localhost:8000";
-axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
+axios.defaults.baseURL = "http://localhost:8000";
+// axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
 function App() {
+  const stripePromise = loadStripe("pk_test_51Q7AUjRsMebkM6kidYO8LVKH1BnMsSD5LhVLkLjbKAMT4AHUIMpVxlrrMIPpOKzl3nocX6qU4VaRTN2EeEKFtTVh00RYB6uapI");
   const dispatch = useDispatch(); // Get dispatch from useDispatch
   const initializeCart = () => {
     const cart = JSON.parse(localStorage.getItem("cart"));
@@ -36,7 +39,6 @@ function App() {
     initializeCart();
   }, []);
   useEffect(() => {
-    
     GetAuthState(dispatch); // Pass dispatch as an argument to GetAuthState
     const cart = JSON.parse(localStorage.getItem("cart"));
     const total = cart.reduce(
@@ -57,7 +59,14 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
         </Route>
 
-        <Route path="/placeorder" element={<OrderConfirmation />} />
+        <Route
+          path="/placeorder"
+          element={
+            <Elements stripe={stripePromise}>
+              <OrderConfirmation />
+            </Elements>
+          }
+        />
         <Route
           path="/products"
           element={<Products searchQuery={searchQuery} />}

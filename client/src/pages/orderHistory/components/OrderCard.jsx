@@ -20,9 +20,9 @@ export const OrderCard = ({ order }) => (
         </CardTitle>
         <Badge
           variant={
-            order.paymentStatus === "Delivered" ? "default" : "secondary"
+            order.paymentStatus === "paid" ? "default" : "secondary"
           }
-          className="text-sm"
+          className={`text-sm ${order.paymentStatus === "paid" ? "bg-green-500" : ""}`}
         >
           {order.paymentStatus}
         </Badge>
@@ -51,7 +51,7 @@ export const OrderCard = ({ order }) => (
       <Separator className="my-4" />
       <div className="flex justify-between items-center font-bold">
         <span className="text-green-800">Total</span>
-        <span className="text-green-700">${order.total.toFixed(2)}</span>
+        <span className="text-green-700"> ₹{order.total.toFixed(2)}</span>
       </div>
     </CardContent>
     <CardFooter>

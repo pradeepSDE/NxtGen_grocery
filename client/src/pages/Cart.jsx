@@ -138,7 +138,7 @@ export const Cart = () => {
                     {product.name}
                   </h3>
                   <p className="text-green-600">
-                    ${product?.price?.toFixed(2)}
+                  ₹{product?.price?.toFixed(2)}
                   </p>
                 </div>
                 <div className="flex items-center">

@@ -7,6 +7,7 @@ const session = require("express-session");
 const passport = require("passport");
 const app = express();
 const authenticateJWT = require("./midldlewares/authenticateJWT");
+const createPayment = require("./controllers/paymentControl");
 app.use(cookieParser());
 app.use(
   session({
@@ -46,7 +47,7 @@ const port = 8000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
-
+app.post("/payment",createPayment);
 //db conection //
 mongoose
   .connect(process.env.MONGO_URL)
