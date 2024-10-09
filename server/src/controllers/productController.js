@@ -39,15 +39,14 @@ const getProducts = async (req, res) => {
   }
 };
 
-const fetchProducts = async(req,res)=>{
+const fetchProducts = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const offset = (page - 1) * limit;
   try {
-    const products = await Product.find({});
-    if (!products) {
-      res.json({ error: "no products found" });
-    }
+    const products = await Product.find().skip(offset).limit(limit);
     res.json(products);
   } catch (error) {
     console.log(error);
   }
-}
-module.exports = {fetchProducts, createProduct, getProducts };
+};
+module.exports = { fetchProducts, createProduct, getProducts };

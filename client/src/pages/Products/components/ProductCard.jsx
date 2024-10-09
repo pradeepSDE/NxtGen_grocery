@@ -23,6 +23,7 @@ export const ProductCard = ({ product, handleAddToCart }) => {
     <Card onClick={handleClick} key={product._id} className="overflow-hidden flex flex-col h-full ">
       <CardHeader className="p-0">
         <img
+         loading="lazy"
           src={product.image}
           alt={product.name}
           className="w-auto h-auto max-w-full max-h-full object-contain"

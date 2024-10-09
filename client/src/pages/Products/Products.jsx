@@ -35,18 +35,26 @@ export const Products = ({ searchQuery }) => {
   const brands = Array.from(new Set(products.map((p) => p.brand)));
   const dispatch = useDispatch();
   const loadMore = () => {
+    if (products.length < totalProducts) {
+      setPage((prev) => prev + 1);
+    }
     setVisibleProducts((prevCount) => Math.min(prevCount + 4, products.length));
   };
+  const [page, setPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
   const fetchProducts = async () => {
     setLoading(true);
-    const response = await axios.get("/product/fetchProducts");
-    setProducts(response.data);
+    const response = await axios.get(
+      `/product/fetchProducts?page=${page}&limit=10`
+    );
+    setProducts((prev) => [...prev, ...response.data]);
+    // setProducts(response.data);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     const filtered = products.filter(
@@ -298,7 +306,7 @@ export const Products = ({ searchQuery }) => {
             <div className="flex-1">
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
-                  {filteredProducts.slice(0,visibleProducts).map((product) => (
+                  {filteredProducts.slice(0, visibleProducts).map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}
@@ -317,16 +325,16 @@ export const Products = ({ searchQuery }) => {
                   </p>
                 </Card>
               )}
-          {visibleProducts < products.length && (
-            <div className="mt-8 text-center">
-              <Button
-                onClick={loadMore}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full text-lg inline-flex items-center"
-              >
-                <Plus className="mr-2 h-5 w-5" /> Load More
-              </Button>
-            </div>
-          )}
+              {visibleProducts < products.length && (
+                <div className="mt-8 text-center">
+                  <Button
+                    onClick={loadMore}
+                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full text-lg inline-flex items-center"
+                  >
+                    <Plus className="mr-2 h-5 w-5" /> Load More
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
