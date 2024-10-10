@@ -12,7 +12,7 @@ import axios from "axios";
 import { SkeletonProductCard } from "./components/productSkeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 export const Products = ({ searchQuery }) => {
-  const [visibleProducts, setVisibleProducts] = useState(8);
+  const [visibleProducts, setVisibleProducts] = useState(10);
   const [products, setProducts] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -38,16 +38,23 @@ export const Products = ({ searchQuery }) => {
   }, []);
 
   const loadMore = () => {
-    if (products.length < totalProducts) {
+    if (
+      products.length <= totalProducts ||
+      products.length === 0 ||
+      totalProducts === 0
+    ) {
       setPage((prev) => prev + 1);
     }
-    setVisibleProducts((prevCount) => Math.min(prevCount + 4, products.length));
+    if (visibleProducts < totalProducts) {
+      setVisibleProducts((prevCount) => prevCount + 8); // Load 8 more products
+    }
+    // setVisibleProducts((prevCount) => Math.min(prevCount + 8, products.length));
   };
   const fetchProducts = async () => {
     setLoading(true);
     const response = await axios.get(`/product/fetchProducts`, {
       params: {
-        page,
+        page: page,
         limit: 10,
         brands: selectedBrands,
         categories: selectedCategories,
@@ -56,7 +63,14 @@ export const Products = ({ searchQuery }) => {
         searchQuery: searchQuery,
       },
     });
-    setProducts(response.data.products);
+    // setProducts(response.data.products);
+    console.log(response.data.products, response.data.total);
+
+    setProducts((prevProducts) => [...prevProducts, ...response.data.products]);
+    console.log(products);
+
+    setTotalProducts(response.data.total);
+    console.log(totalProducts);
     setLoading(false);
   };
 

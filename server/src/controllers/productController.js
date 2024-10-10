@@ -41,8 +41,15 @@ const getProducts = async (req, res) => {
 
 const fetchProducts = async (req, res) => {
   // const { page = 1, limit = 10 } = req.params;
-  const { brands, categories, limit, page, minPrice, maxPrice, searchQuery } =
-    req.query;
+  const {
+    brands,
+    categories,
+    limit = 10,
+    page = 1,
+    minPrice,
+    maxPrice,
+    searchQuery,  
+  } = req.query;
   const offset = (page - 1) * limit;
   // console.log(brands, categories, minPrice, maxPrice);
 
@@ -77,7 +84,7 @@ const fetchCategoriesAndBrands = async (req, res) => {
   try {
     const categories = await Product.distinct("category");
     const brands = await Product.distinct("brand");
-    console.log(categories, brands);
+
     res.json({ categories, brands });
   } catch (error) {
     console.log(error);
