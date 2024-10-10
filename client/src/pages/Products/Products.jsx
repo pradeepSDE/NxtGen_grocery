@@ -1,73 +1,68 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { ShoppingCart, Filter, X, XCircle, Plus } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { Filter, X, XCircle, Plus } from "lucide-react";
+import { useDispatch } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 import { ProductCard } from "./components/ProductCard";
 import axios from "axios";
-import {
-  SkeletonCard,
-  SkeletonProductCard,
-} from "./components/productSkeleton";
+import { SkeletonProductCard } from "./components/productSkeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
 export const Products = ({ searchQuery }) => {
-  console.log(searchQuery);
   const [visibleProducts, setVisibleProducts] = useState(8);
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState(products);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const categories = Array.from(new Set(products.map((p) => p.category)));
-  const brands = Array.from(new Set(products.map((p) => p.brand)));
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
   const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchCategoriesAndBrands = async () => {
+      try {
+        const response = await axios.get("/product/fetchCategoriesandBrands");
+        setCategories(response.data.categories || []);
+        setBrands(response.data.brands || []);
+      } catch (error) {
+        console.error("Error fetching categories and brands:", error);
+      }
+    };
+    fetchCategoriesAndBrands();
+  }, []);
+
   const loadMore = () => {
     if (products.length < totalProducts) {
       setPage((prev) => prev + 1);
     }
     setVisibleProducts((prevCount) => Math.min(prevCount + 4, products.length));
   };
-  const [page, setPage] = useState(1);
-  const [totalProducts, setTotalProducts] = useState(0);
   const fetchProducts = async () => {
     setLoading(true);
-    const response = await axios.get(
-      `/product/fetchProducts?page=${page}&limit=10`
-    );
-    setProducts((prev) => [...prev, ...response.data]);
-    // setProducts(response.data);
+    const response = await axios.get(`/product/fetchProducts`, {
+      params: {
+        page,
+        limit: 10,
+        brands: selectedBrands,
+        categories: selectedCategories,
+        minPrice: priceRange[0],
+        maxPrice: priceRange[1],
+        searchQuery: searchQuery,
+      },
+    });
+    setProducts(response.data.products);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchProducts();
-  }, [page]);
-
-  useEffect(() => {
-    const filtered = products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        product.price >= priceRange[0] &&
-        product.price <= priceRange[1] &&
-        (selectedCategories.length === 0 ||
-          selectedCategories.includes(product.category)) &&
-        (selectedBrands.length === 0 || selectedBrands.includes(product.brand))
-    );
-    setFilteredProducts(filtered);
-  }, [products, priceRange, selectedCategories, selectedBrands, searchQuery]);
+  }, [page, selectedBrands, selectedCategories, priceRange, searchQuery]);
 
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
@@ -151,24 +146,25 @@ export const Products = ({ searchQuery }) => {
                   <Label className="text-green-700 mb-2 block">
                     Categories
                   </Label>
-                  {categories.map((category) => (
-                    <div
-                      key={category}
-                      className="flex items-center space-x-2 mb-2"
-                    >
-                      <Checkbox
-                        id={`category-${category}`}
-                        checked={selectedCategories.includes(category)}
-                        onCheckedChange={() => toggleCategory(category)}
-                      />
-                      <label
-                        htmlFor={`category-${category}`}
-                        className="text-sm text-green-600 cursor-pointer"
+                  {categories &&
+                    categories.map((category) => (
+                      <div
+                        key={category}
+                        className="flex items-center space-x-2 mb-2"
                       >
-                        {category}
-                      </label>
-                    </div>
-                  ))}
+                        <Checkbox
+                          id={`category-${category}`}
+                          checked={selectedCategories.includes(category)}
+                          onCheckedChange={() => toggleCategory(category)}
+                        />
+                        <label
+                          htmlFor={`category-${category}`}
+                          className="text-sm text-green-600 cursor-pointer"
+                        >
+                          {category}
+                        </label>
+                      </div>
+                    ))}
                 </div>
                 <div>
                   <Label className="text-green-700 mb-2 block">Brands</Label>
@@ -304,9 +300,9 @@ export const Products = ({ searchQuery }) => {
             </div>
           ) : (
             <div className="flex-1">
-              {filteredProducts.length > 0 ? (
+              {products.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
-                  {filteredProducts.slice(0, visibleProducts).map((product) => (
+                  {products.slice(0, visibleProducts).map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}

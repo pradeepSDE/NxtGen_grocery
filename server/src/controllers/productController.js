@@ -27,7 +27,7 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   const productId = req.params.productId;
-  console.log(productId);
+
   try {
     const product = await Product.findOne({ _id: productId }).lean();
     if (!product) {
@@ -40,13 +40,53 @@ const getProducts = async (req, res) => {
 };
 
 const fetchProducts = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  // const { page = 1, limit = 10 } = req.params;
+  const { brands, categories, limit, page, minPrice, maxPrice, searchQuery } =
+    req.query;
   const offset = (page - 1) * limit;
+  // console.log(brands, categories, minPrice, maxPrice);
+
   try {
-    const products = await Product.find().skip(offset).limit(limit);
-    res.json(products);
+    const query = {};
+    if (brands) {
+      query.brand = { $in: brands };
+    }
+    if (categories) {
+      query.category = { $in: categories };
+    }
+    if (minPrice && maxPrice) {
+      query.price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) };
+    }
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in 'name'
+        { description: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in 'description'
+      ];
+    }
+
+    // console.log(query);
+    const products = await Product.find(query).skip(offset).limit(limit);
+    const total = await Product.countDocuments(query); // Get the total count of products
+    res.json({ products, total });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
-module.exports = { fetchProducts, createProduct, getProducts };
+const fetchCategoriesAndBrands = async (req, res) => {
+  try {
+    const categories = await Product.distinct("category");
+    const brands = await Product.distinct("brand");
+    console.log(categories, brands);
+    res.json({ categories, brands });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+module.exports = {
+  fetchProducts,
+  createProduct,
+  getProducts,
+  fetchCategoriesAndBrands,
+};
