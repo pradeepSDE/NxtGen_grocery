@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { Filter, X, XCircle, Plus } from "lucide-react";
+import { Filter, X, XCircle } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
 import { ProductCard } from "./components/ProductCard";
@@ -12,7 +12,6 @@ import axios from "axios";
 import { SkeletonProductCard } from "./components/productSkeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 export const Products = ({ searchQuery }) => {
-  const [visibleProducts, setVisibleProducts] = useState(8);
   const [products, setProducts] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -156,7 +155,7 @@ export const Products = ({ searchQuery }) => {
     const productWithQuantity = { ...product, quantity: product.quantity || 1 };
     dispatch(setCart(productWithQuantity));
     const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingItem = currentCart.find((item) => item.id === product.id);
+    const existingItem = currentCart.find((item) => item._id === product._id);
     if (existingItem) {
       existingItem.quantity += 1;
     } else {

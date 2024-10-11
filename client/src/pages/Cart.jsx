@@ -26,13 +26,13 @@ import { setUser } from "@/store/slices/authSlice";
 
 export const Cart = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  console.log(isAuthenticated, user, "this is from cart");
-  console.log(user?.name, user?.email, user?.address);
+
   const [address, setAddress] = useState(user?.address || "");
   const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   const cart = useSelector((state) => state.cart);
   const cartProducts = cart.cart;
+  console.log(cartProducts);
 
   const total = useSelector((state) => state.cart.total);
   const navigate = useNavigate();
@@ -138,7 +138,7 @@ export const Cart = () => {
                     {product.name}
                   </h3>
                   <p className="text-green-600">
-                  ₹{product?.price?.toFixed(2)}
+                    ₹{product?.price?.toFixed(2)}
                   </p>
                 </div>
                 <div className="flex items-center">

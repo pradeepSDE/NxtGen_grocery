@@ -50,9 +50,11 @@ export const OrderConfirmation = () => {
   };
 
   //placing order
+  const cart = useSelector((state) => state.cart.cart);
   const placeOrder = async (paymentStatus) => {
     setLoading(true);
-    const cart = JSON.parse(localStorage.getItem("cart"));
+    // const cart = JSON.parse(localStorage.getItem("cart"));
+    console.log(cart,"cart");
     const orderData = {
       cart,
       total: totalAmount,

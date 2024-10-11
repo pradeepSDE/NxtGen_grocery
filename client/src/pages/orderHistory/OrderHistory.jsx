@@ -8,7 +8,7 @@ import { SkeletonOrderHistory } from "./components/Skeleton";
 export const OrderHistory = () => {
   const token = localStorage.getItem("token");
   const [pastOrders, setPastOrders] = useState([]);
-  const [loading,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);
     const fetchOrders = async () => {
@@ -18,11 +18,9 @@ export const OrderHistory = () => {
             Authorization: `Bearer ${token}`, // Send the token in Authorization header
           },
         });
-        console.log( response.data);
-        const array =Array.from(Object.values(response.data));
-        console.log ( array);
+        const array = Array.from(Object.values(response.data));
+        
         setPastOrders(array);
-        console.log(typeof(pastOrders));
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -35,28 +33,28 @@ export const OrderHistory = () => {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
-      {loading?(
-        <SkeletonOrderHistory/>
-      ):(
-        
+      {loading ? (
+        <SkeletonOrderHistory />
+      ) : (
         <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-green-800 mb-8 text-center">
-          Your Order History
-        </h1>
-        <h3 className="text-xl font-semibold text-green-800  text-center">Showing Last 10 Orders</h3>
-        {hasOrders ? (
-          <div className="space-y-6">
-            {pastOrders.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))}
-          </div>
-        ) : (
-          <NoOrders />
-        )}
-      </div>
-        )}
+          <h1 className="text-3xl font-bold text-green-800 mb-8 text-center">
+            Your Order History
+          </h1>
+          <h3 className="text-xl font-semibold text-green-800  text-center">
+            Showing Last 10 Orders
+          </h3>
+          {hasOrders ? (
+            <div className="space-y-6">
+              {pastOrders.map((order) => (
+                <OrderCard key={order.id} order={order} />
+              ))}
+            </div>
+          ) : (
+            <NoOrders />
+          )}
+        </div>
+      )}
     </div>
   );
 };
