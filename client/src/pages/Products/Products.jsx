@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +24,27 @@ export const Products = ({ searchQuery }) => {
   const [page, setPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
   const dispatch = useDispatch();
+  const [productLoading, setProductLoading] = useState(false);
+  const productsRef = useRef(null);
+  const [productsHeight, setProductsHeight] = useState(0);
+  useEffect(() => {
+    const updateProductsHeight = () => {
+      if (productsRef.current) {
+        setProductsHeight(productsRef.current.offsetHeight);
+      }
+    };
+
+    // Run it initially after render
+    updateProductsHeight();
+
+    // Also update on window resize
+    window.addEventListener("resize", updateProductsHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateProductsHeight);
+    };
+  }, []);
+  console.log(productsHeight);
   useEffect(() => {
     const fetchCategoriesAndBrands = async () => {
       try {
@@ -37,19 +58,19 @@ export const Products = ({ searchQuery }) => {
     fetchCategoriesAndBrands();
   }, []);
 
-  const loadMore = () => {
-    if (
-      products.length <= totalProducts ||
-      products.length === 0 ||
-      totalProducts === 0
-    ) {
-      setPage((prev) => prev + 1);
-    }
-    if (visibleProducts < totalProducts) {
-      setVisibleProducts((prevCount) => prevCount + 8); // Load 8 more products
-    }
-    // setVisibleProducts((prevCount) => Math.min(prevCount + 8, products.length));
-  };
+  // const loadMore = () => {
+  //   if (
+  //     products.length <= totalProducts ||
+  //     products.length === 0 ||
+  //     totalProducts === 0
+  //   ) {
+  //     setPage((prev) => prev + 1);
+  //   }
+  //   if (visibleProducts < totalProducts) {
+  //     setVisibleProducts((prevCount) => prevCount + 8); // Load 8 more products
+  //   }
+  //   // setVisibleProducts((prevCount) => Math.min(prevCount + 8, products.length));
+  // };
   const fetchProducts = async () => {
     setLoading(true);
     const response = await axios.get(`/product/fetchProducts`, {
@@ -65,9 +86,17 @@ export const Products = ({ searchQuery }) => {
     });
     // setProducts(response.data.products);
     console.log(response.data.products, response.data.total);
-
-    setProducts((prevProducts) => [...prevProducts, ...response.data.products]);
-    console.log(products);
+    if (searchQuery.length > 0) {
+      setProducts(response.data.products);
+      setProductLoading(false);
+    } else {
+      setProducts((prevProducts) => [
+        ...prevProducts,
+        ...response.data.products,
+      ]);
+      setProductLoading(false);
+    }
+    console.log(products, products.length);
 
     setTotalProducts(response.data.total);
     console.log(totalProducts);
@@ -96,6 +125,51 @@ export const Products = ({ searchQuery }) => {
     return typeof price === "number" ? `₹${price.toFixed(2)}` : "N/A";
   };
 
+  const handleScroll = () => {
+    // console.log(
+    //   document.body.scrollHeight - 300,
+    //   window.scrollY + window.innerHeight
+    // );
+    // if (
+    //   document.body.scrollHeight - 300 <
+    //   window.scrollY + window.innerHeight
+    // ) {
+    //   setProductLoading(true);
+    // }
+    if (productsRef.current) {
+      const productsHeight = productsRef.current.offsetHeight;
+      const scrollPosition = window.scrollY + window.innerHeight;
+
+      // Check if the user is near the bottom of the Products component
+      if (
+        scrollPosition >= productsHeight - 800 &&
+        totalProducts > products.length
+      ) {
+        setProductLoading(true);
+      }
+    }
+  };
+
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  }
+
+  window.addEventListener("scroll", debounce(handleScroll, 500));
+
+  useEffect(() => {
+    if (productLoading == true && products.length < totalProducts) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [productLoading]);
+
   const handleAddToCart = (product) => {
     const productWithQuantity = { ...product, quantity: product.quantity || 1 };
     dispatch(setCart(productWithQuantity));
@@ -110,7 +184,10 @@ export const Products = ({ searchQuery }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      ref={productsRef}
+      className="min-h-screen bg-gradient-to-b from-green-100 to-white py-12 px-4 sm:px-6 lg:px-8"
+    >
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-green-800 mb-8 text-center">
           Our Products
@@ -316,13 +393,20 @@ export const Products = ({ searchQuery }) => {
             <div className="flex-1">
               {products.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
-                  {products.slice(0, visibleProducts).map((product) => (
+                  {products.map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}
                       handleAddToCart={handleAddToCart}
                     />
                   ))}
+                  {productLoading && (
+                    <div className="flex-1 justify-center items-center col-span-4">
+                      <SkeletonProductCard />
+                      {/* <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500">
+                      </div> */}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Card className="p-8 text-center">
@@ -335,7 +419,7 @@ export const Products = ({ searchQuery }) => {
                   </p>
                 </Card>
               )}
-              {visibleProducts < products.length && (
+              {/* {visibleProducts < products.length && (
                 <div className="mt-8 text-center">
                   <Button
                     onClick={loadMore}
@@ -344,7 +428,7 @@ export const Products = ({ searchQuery }) => {
                     <Plus className="mr-2 h-5 w-5" /> Load More
                   </Button>
                 </div>
-              )}
+              )} */}
             </div>
           )}
         </div>

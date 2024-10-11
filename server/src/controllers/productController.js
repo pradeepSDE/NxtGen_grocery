@@ -41,6 +41,7 @@ const getProducts = async (req, res) => {
 
 const fetchProducts = async (req, res) => {
   // const { page = 1, limit = 10 } = req.params;
+  console.log("fetch chala nbhai")
   const {
     brands,
     categories,
