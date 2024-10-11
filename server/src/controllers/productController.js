@@ -67,6 +67,7 @@ const fetchProducts = async (req, res) => {
       query.$or = [
         { name: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in 'name'
         { description: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in 'description'
+        { category: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in 'description'
       ];
     }
 

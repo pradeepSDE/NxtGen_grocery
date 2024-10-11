@@ -26,8 +26,19 @@ export const FeaturedProducts = () => {
   const dispatch = useDispatch();
   const fetchProducts = async () => {
     setLoading(true);
-    const response = await axios.get("/product/fetchProducts");
-    setProducts(response.data.slice(0, 10));
+    const response = await axios.get(`/product/fetchProducts`, {
+      params: {
+        page: 1,
+        limit: 10,
+        brands: [],
+        categories: [],
+        minPrice: 100,
+        maxPrice: 1000,
+        searchQuery: "",
+      },
+    });
+    // const response = await axios.get("/product/fetchProducts");
+    setProducts(response.data.products);
     setLoading(false);
   };
   useEffect(() => {
