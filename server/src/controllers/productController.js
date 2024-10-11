@@ -41,7 +41,7 @@ const getProducts = async (req, res) => {
 
 const fetchProducts = async (req, res) => {
   // const { page = 1, limit = 10 } = req.params;
-  console.log("fetch chala nbhai")
+
   const {
     brands,
     categories,
@@ -49,11 +49,9 @@ const fetchProducts = async (req, res) => {
     page = 1,
     minPrice,
     maxPrice,
-    searchQuery,  
+    searchQuery,
   } = req.query;
   const offset = (page - 1) * limit;
-  // console.log(brands, categories, minPrice, maxPrice);
-
   try {
     const query = {};
     if (brands) {

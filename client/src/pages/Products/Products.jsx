@@ -12,7 +12,7 @@ import axios from "axios";
 import { SkeletonProductCard } from "./components/productSkeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 export const Products = ({ searchQuery }) => {
-  const [visibleProducts, setVisibleProducts] = useState(10);
+  const [visibleProducts, setVisibleProducts] = useState(8);
   const [products, setProducts] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -44,7 +44,7 @@ export const Products = ({ searchQuery }) => {
       window.removeEventListener("resize", updateProductsHeight);
     };
   }, []);
-  console.log(productsHeight);
+
   useEffect(() => {
     const fetchCategoriesAndBrands = async () => {
       try {
@@ -58,25 +58,19 @@ export const Products = ({ searchQuery }) => {
     fetchCategoriesAndBrands();
   }, []);
 
-  // const loadMore = () => {
-  //   if (
-  //     products.length <= totalProducts ||
-  //     products.length === 0 ||
-  //     totalProducts === 0
-  //   ) {
-  //     setPage((prev) => prev + 1);
-  //   }
-  //   if (visibleProducts < totalProducts) {
-  //     setVisibleProducts((prevCount) => prevCount + 8); // Load 8 more products
-  //   }
-  //   // setVisibleProducts((prevCount) => Math.min(prevCount + 8, products.length));
-  // };
+  useEffect(() => {
+    setProducts([]); // Clear products on new search
+    setPage(1); // Reset the page to 1 for a new search
+  }, [searchQuery]);
+  useEffect(() => {
+    fetchProducts();
+  }, [page, selectedBrands, selectedCategories, priceRange, searchQuery]);
+
   const fetchProducts = async () => {
-    setLoading(true);
     const response = await axios.get(`/product/fetchProducts`, {
       params: {
         page: page,
-        limit: 10,
+        limit: 8,
         brands: selectedBrands,
         categories: selectedCategories,
         minPrice: priceRange[0],
@@ -90,10 +84,14 @@ export const Products = ({ searchQuery }) => {
       setProducts(response.data.products);
       setProductLoading(false);
     } else {
-      setProducts((prevProducts) => [
-        ...prevProducts,
-        ...response.data.products,
-      ]);
+      const newProducts = response.data.products;
+      setProducts((prevProducts) => {
+        const allProducts = [...prevProducts, ...newProducts];
+        const uniqueProducts = Array.from(
+          new Set(allProducts.map((p) => p._id))
+        ).map((id) => allProducts.find((p) => p._id === id));
+        return uniqueProducts;
+      });
       setProductLoading(false);
     }
     console.log(products, products.length);
@@ -102,10 +100,6 @@ export const Products = ({ searchQuery }) => {
     console.log(totalProducts);
     setLoading(false);
   };
-
-  useEffect(() => {
-    fetchProducts();
-  }, [page, selectedBrands, selectedCategories, priceRange, searchQuery]);
 
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
@@ -126,23 +120,11 @@ export const Products = ({ searchQuery }) => {
   };
 
   const handleScroll = () => {
-    // console.log(
-    //   document.body.scrollHeight - 300,
-    //   window.scrollY + window.innerHeight
-    // );
-    // if (
-    //   document.body.scrollHeight - 300 <
-    //   window.scrollY + window.innerHeight
-    // ) {
-    //   setProductLoading(true);
-    // }
     if (productsRef.current) {
       const productsHeight = productsRef.current.offsetHeight;
       const scrollPosition = window.scrollY + window.innerHeight;
-
-      // Check if the user is near the bottom of the Products component
       if (
-        scrollPosition >= productsHeight - 800 &&
+        scrollPosition >= productsHeight - 900 &&
         totalProducts > products.length
       ) {
         setProductLoading(true);
@@ -165,7 +147,7 @@ export const Products = ({ searchQuery }) => {
   window.addEventListener("scroll", debounce(handleScroll, 500));
 
   useEffect(() => {
-    if (productLoading == true && products.length < totalProducts) {
+    if (productLoading == true && products.length + 1 < totalProducts) {
       setPage((prevPage) => prevPage + 1);
     }
   }, [productLoading]);
@@ -400,11 +382,9 @@ export const Products = ({ searchQuery }) => {
                       handleAddToCart={handleAddToCart}
                     />
                   ))}
-                  {productLoading && (
+                  {productLoading && totalProducts != products.length && (
                     <div className="flex-1 justify-center items-center col-span-4">
                       <SkeletonProductCard />
-                      {/* <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500">
-                      </div> */}
                     </div>
                   )}
                 </div>
@@ -419,16 +399,6 @@ export const Products = ({ searchQuery }) => {
                   </p>
                 </Card>
               )}
-              {/* {visibleProducts < products.length && (
-                <div className="mt-8 text-center">
-                  <Button
-                    onClick={loadMore}
-                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full text-lg inline-flex items-center"
-                  >
-                    <Plus className="mr-2 h-5 w-5" /> Load More
-                  </Button>
-                </div>
-              )} */}
             </div>
           )}
         </div>
