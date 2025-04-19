@@ -49,7 +49,7 @@ export const SignIn = () => {
   };
 
   const handleGoogleSignup = () => {
-    window.location.href = "http://localhost:8000/login/federated/google";
+    window.location.href = "https://nxt-gen-grocery.vercel.app/login/federated/google";
   };
 
   return (
