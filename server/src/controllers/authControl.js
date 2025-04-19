@@ -1,58 +1,13 @@
 const User = require("../models/user");
 const { hashedPassword, comparePassword } = require("../helper/auth");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oidc");
+// const passport = require("passport");
+const passport = require("../config/passport");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const test = (req, res) => {
   res.json("Hello World! from ");
 };
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID, // Your Google Client ID
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Your Google Client Secret
-      callbackURL: "/auth/google/callback", // The callback URL after successful login
-      scope: ["openid", "email", "profile"],
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      // Here, you can handle the Google profile (create a user in DB or match an existing one)
-      // Example: Find or create a user in your database
-      try {
-        console.log("profile", profile);
-        const email =
-          profile.emails && profile.emails[0] && profile.emails[0].value;
-        const name = profile.displayName;
 
-        if (!email || !name) {
-          throw new Error("Email or name not found in Google profile");
-        }
-
-        let user = await User.findOne({ email: email });
-        if (!user) {
-          const newUser = await User.create({
-            name: name,
-            email: email,
-            googleId: profile.id,
-          });
-          console.log("new user created", newUser);
-        } else {
-          console.log("user found", user);
-        }
-        done(null, user);
-      } catch (error) {
-        done(error, null);
-      }
-    }
-  )
-);
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
 const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -109,11 +64,11 @@ const signin = async (req, res) => {
         process.env.JWT_SECRET
       );
       // res.cookie("token", token);
-      res.cookie('token', token, {
-        httpOnly: true,       // Ensures the cookie is not accessible via JavaScript
-        secure: true,         // Ensures the cookie is only sent over HTTPS
-        sameSite: 'None',     // Required for cross-origin requests
-        maxAge: 24 * 60 * 60 * 1000,  // 1 day expiration
+      res.cookie("token", token, {
+        httpOnly: true, // Ensures the cookie is not accessible via JavaScript
+        secure: true, // Ensures the cookie is only sent over HTTPS
+        sameSite: "None", // Required for cross-origin requests
+        maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
       });
 
       return res.json({
@@ -160,9 +115,38 @@ const logout = (req, res) => {
 const googleSignin = passport.authenticate("google", {
   scope: ["openid", "profile", "email"],
 });
-const googleCallback = (req, res) => {
-  res.redirect("/"); // Redirect the user after successful authentication
+const googleCallback = (req, res, next) => {
+  passport.authenticate(
+    "google",
+    { session: false },
+    async (err, user, info) => {
+      if (err || !user) {
+        console.log("Auth error:", err);
+        return res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
+      }
+
+      try {
+        const token = jwt.sign(
+          { id: user._id, name: user.name, email: user.email },
+          process.env.JWT_SECRET
+        );
+
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "None",
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        return res.redirect(`${process.env.FRONTEND_URL}/products`);
+      } catch (error) {
+        console.error("JWT creation error:", error);
+        res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
+      }
+    }
+  )(req, res, next);
 };
+
 module.exports = {
   googleCallback,
   googleSignin,
