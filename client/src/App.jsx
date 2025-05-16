@@ -1,6 +1,7 @@
 // import { Home } from "lucide-react"
 
 import { Route, Routes } from "react-router-dom";
+import { useLocation } from "react-router-dom"
 import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home/Home";
@@ -21,13 +22,21 @@ import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
 import Footer from "./components/Footer";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import AdminPanel from "./pages/admin/Main/AdminPanel";
+import AdminOrderManagement from "./pages/admin/Orders/Order";
+import Dashboard from "./pages/admin/Dashboard/Dashboard";
+import ProductManagement from "./pages/admin/products/Products";
+import UserManagement from "./pages/admin/Users/UserManagement";
 
 axios.defaults.withCredentials = true;
-// axios.defaults.baseURL = "http://localhost:8000";
-axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
+axios.defaults.baseURL = "http://localhost:8000";
+// axios.defaults.baseURL = "https://nxt-gen-grocery.vercel.app/";
 function App() {
   const stripePromise = loadStripe("pk_test_51Q7AUjRsMebkM6kidYO8LVKH1BnMsSD5LhVLkLjbKAMT4AHUIMpVxlrrMIPpOKzl3nocX6qU4VaRTN2EeEKFtTVh00RYB6uapI");
   const dispatch = useDispatch(); 
+   const location = useLocation();
+   const hideFooter = location.pathname.startsWith("/admin");
+   const hideNavbar = location.pathname.startsWith("/admin");
   const initializeCart = () => {
     const cart = JSON.parse(localStorage.getItem("cart"));
 
@@ -50,7 +59,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   return (
     <>
-      <Navbar setSearchQuery={setSearchQuery} />
+      {!hideNavbar && <Navbar setSearchQuery={setSearchQuery} />}
       <Routes>
         <Route path="/" element={<Home />} />
 
@@ -75,8 +84,14 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/productdetails/:id" element={<ProductDetails />} />
         <Route path="/product/createproduct" element={<ProductForm />} />
+         <Route path="/admin" element={<AdminPanel />}>
+      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="orders" element={<AdminOrderManagement />} />
+      <Route path="products" element={<ProductManagement/>} />
+      <Route path="users" element={<UserManagement/>} />
+    </Route>
       </Routes>
-      <Footer />
+      {!hideFooter && <Footer />}
     </>
   );
 }
