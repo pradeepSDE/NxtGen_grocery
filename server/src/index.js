@@ -42,6 +42,7 @@ app.use("/", require("./routes/authRoute"));
 app.use(express.urlencoded({ extended: false }));
 // app.use("/", require("./helper/authCheck"));
 app.use("/api", authenticateJWT, require("./routes/orderRoute"));
+app.use("/api/admin", authenticateJWT, require("./routes/adminRoute"));
 app.use("/product", require("./routes/productRoute"));
 const port = 8000;
 app.listen(port, () => {

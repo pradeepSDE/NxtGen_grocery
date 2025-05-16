@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Edit, Search, Trash2, UserPlus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -32,6 +32,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAllUsers } from '@/store/Actions/userActions'
 
 // Sample user data
 const initialUsers = [
@@ -108,7 +110,7 @@ const initialUsers = [
 ]
 
 export default function UserManagement() {
-  const [users, setUsers] = useState(initialUsers)
+//   const [users, setUsers] = useState(initialUsers)
   const [searchQuery, setSearchQuery] = useState('')
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -121,6 +123,13 @@ export default function UserManagement() {
     status: 'Active',
     avatar: '/placeholder.svg?height=40&width=40'
   })
+
+  const dispatch = useDispatch();
+  const { users, loading, error } = useSelector((state) => state.users)
+
+   useEffect(() => {
+    dispatch(fetchAllUsers());
+  }, [dispatch]);
 
   const filteredUsers = users.filter(user =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
